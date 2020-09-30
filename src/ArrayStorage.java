@@ -23,8 +23,9 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid))
+            if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
+            }
         }
         return null;
     }
@@ -40,7 +41,9 @@ public class ArrayStorage {
         if (indexOfStorage > -1) {
             System.arraycopy(storage, indexOfStorage + 1, storage, indexOfStorage, size - indexOfStorage - 1);
             storage[size] = null;
-            size--;
+            if (size > 0) {
+                size--;
+            }
         }
     }
 
