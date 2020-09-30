@@ -3,19 +3,26 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size = 0;
 
     void clear() {
-        for (int i = 0; i < size(); ++i) {
-                storage[i] = null;
+        for (int i = 0; i < size; i++) {
+            storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
-        storage[size()] = r;
+        if (size == storage.length) {
+            System.out.println("Array is overflow");
+        } else {
+            storage[size] = r;
+            size++;
+        }
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < size(); ++i) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid))
                 return storage[i];
         }
@@ -24,14 +31,16 @@ public class ArrayStorage {
 
     void delete(String uuid) {
         int indexOfStorage = -1;
-        for (int i = 0; i < storage.length; ++i) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 indexOfStorage = i;
                 break;
             }
         }
         if (indexOfStorage > -1) {
-            System.arraycopy(storage, indexOfStorage + 1, storage, indexOfStorage, storage.length - indexOfStorage - 1);
+            System.arraycopy(storage, indexOfStorage + 1, storage, indexOfStorage, size - indexOfStorage - 1);
+            storage[size] = null;
+            size--;
         }
     }
 
@@ -39,18 +48,14 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] newStorage = new Resume[size()];
-        for (int i = 0; i < newStorage.length; ++i) {
-            newStorage[i] = storage[i];
+        Resume[] resumes = new Resume[size];
+        if (resumes.length >= 0) {
+            System.arraycopy(storage, 0, resumes, 0, resumes.length);
         }
-        return newStorage;
+        return resumes;
     }
 
     int size() {
-        for (int i = 0; i < storage.length; ++i) {
-            if (storage[i] == null)
-                return i;
-        }
-        return storage.length;
+        return size;
     }
 }
