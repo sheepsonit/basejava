@@ -8,23 +8,20 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10_000];
     private int size = 0;
+    private int indexFoundResume = -1;
 
     public void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void update(Resume resume) {
         if (get(resume.getUuid()) != null) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(resume.getUuid())) {
-                    storage[i] = resume;
-                }
-            }
+            storage[indexFoundResume] = resume;
         } else {
-            System.out.println("Resume does`t exist");
+            System.out.println("Can`t update resume. Resume with uuid: " + resume.getUuid() + " does`t exist");
         }
     }
 
@@ -32,7 +29,7 @@ public class ArrayStorage {
         if (size == storage.length) {
             System.out.println("Array is overflow");
         } else if (get(r.getUuid()) != null) {
-            System.out.println("Resume already exist");
+            System.out.println("Can`t save resume. Resume with uuid: " + r.getUuid() + " already exist");
         } else {
             storage[size] = r;
             size++;
@@ -42,28 +39,23 @@ public class ArrayStorage {
     public Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
+                indexFoundResume = i;
                 return storage[i];
             }
         }
+        System.out.println("Can`t get resume. Resume with uuid: " + uuid + " does`t exist");
         return null;
     }
 
     public void delete(String uuid) {
         if (get(uuid) != null) {
-            int indexOfStorage = -1;
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    indexOfStorage = i;
-                    break;
-                }
-            }
-            System.arraycopy(storage, indexOfStorage + 1, storage, indexOfStorage, size - indexOfStorage - 1);
+            System.arraycopy(storage, indexFoundResume + 1, storage, indexFoundResume, size - indexFoundResume - 1);
             storage[size] = null;
             if (size > 0) {
                 size--;
             }
         } else {
-            System.out.println("Resume does`t exist");
+            System.out.println("Can`t delete resume. Resume with uuid: " + uuid + " does`t exist");
         }
     }
 
@@ -71,7 +63,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage,0,size);
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
