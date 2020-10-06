@@ -25,13 +25,13 @@ public class ArrayStorage {
         }
     }
 
-    public void save(Resume r) {
+    public void save(Resume resume) {
         if (size == storage.length) {
-            System.out.println("Array is overflow");
-        } else if (getIndex(r.getUuid()) > -1) {
-            System.out.println("Can`t save resume. Resume with uuid: " + r.getUuid() + " already exist");
+            System.out.println("Storage is overflow");
+        } else if (getIndex(resume.getUuid()) > -1) {
+            System.out.println("Can`t save resume. Resume with uuid: " + resume.getUuid() + " already exist");
         } else {
-            storage[size] = r;
+            storage[size] = resume;
             size++;
         }
     }
@@ -40,13 +40,13 @@ public class ArrayStorage {
         int indexFoundResume = getIndex(uuid);
         if (indexFoundResume > -1) {
             return storage[indexFoundResume];
-        } else {
-            System.out.println("Can`t get resume. Resume with uuid: " + uuid + " does`t exist");
         }
+
+        System.out.println("Can`t get resume. Resume with uuid: " + uuid + " does`t exist");
         return null;
     }
 
-    int getIndex(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -60,9 +60,7 @@ public class ArrayStorage {
         if (indexFoundResume > -1) {
             System.arraycopy(storage, indexFoundResume + 1, storage, indexFoundResume, size - indexFoundResume - 1);
             storage[size] = null;
-            if (size > 0) {
-                size--;
-            }
+            size--;
         } else {
             System.out.println("Can`t delete resume. Resume with uuid: " + uuid + " does`t exist");
         }
