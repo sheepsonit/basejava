@@ -8,9 +8,9 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int STORAGE_LIMIT = 10_000;
-    protected Resume[] storage = new Resume[STORAGE_LIMIT];
-    protected int size = 0;
+    static final int STORAGE_LIMIT = 10_000;
+    Resume[] storage = new Resume[STORAGE_LIMIT];
+    int size = 0;
 
     public int size() {
         return size;
@@ -65,11 +65,11 @@ public abstract class AbstractArrayStorage implements Storage {
         return null;
     }
 
-    protected abstract int getIndex(String uuid);
+    abstract int getIndex(String uuid);
 
-    protected abstract void saveResume(int index, Resume resume);
+    abstract void saveResume(int index, Resume resume);
 
-    protected abstract void deleteResume(int index);
+    abstract void deleteResume(int index);
 
     /**
      * @return array, contains only Resumes in storage (without null)
