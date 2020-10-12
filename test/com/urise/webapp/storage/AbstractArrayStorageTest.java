@@ -102,5 +102,8 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void getAll() {
         Assert.assertEquals(3,storage.getAll().length);
+        for (Resume resume : storage.getAll()) {
+            Assert.assertNotNull(resume);
+        }
     }
 }
