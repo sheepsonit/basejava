@@ -39,7 +39,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void update(){
+    public void update() {
         Resume resume = new Resume(UUID_2);
         storage.update(resume);
         Assert.assertEquals(storage.get(resume.getUuid()), resume);
@@ -107,7 +107,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
-        Assert.assertEquals(3,storage.getAll().length);
-        Assert.assertArrayEquals(new Resume[] {new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)}, storage.getAll());
+        Resume[] resumes = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        Assert.assertArrayEquals(resumes, storage.getAll());
     }
 }
