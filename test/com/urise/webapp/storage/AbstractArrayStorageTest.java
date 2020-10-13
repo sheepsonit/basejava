@@ -4,9 +4,9 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 
 public abstract class AbstractArrayStorageTest {
     private Storage storage;
@@ -35,7 +35,7 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void clear() {
         storage.clear();
-        Assert.assertEquals(0, storage.size());
+        assertSize(0);
     }
 
     @Test
@@ -57,7 +57,7 @@ public abstract class AbstractArrayStorageTest {
         int currentSize = storage.size();
         storage.save(resume);
         Assert.assertEquals(resume, storage.get(resume.getUuid()));
-        Assert.assertEquals(++currentSize, storage.size());
+        assertSize(++currentSize);
     }
 
     @Test(expected = ExistStorageException.class)
@@ -83,7 +83,7 @@ public abstract class AbstractArrayStorageTest {
     public void delete() {
         int currentSize = storage.size();
         storage.delete(UUID_2);
-        Assert.assertEquals(--currentSize, storage.size());
+        assertSize(--currentSize);
         storage.get(UUID_2);
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractArrayStorageTest {
     public void deleteNotExist() {
         int currentSize = storage.size();
         storage.delete(DUMMY);
-        Assert.assertEquals(currentSize, storage.size());
+        assertSize(currentSize);
     }
 
     @Test
@@ -109,5 +109,9 @@ public abstract class AbstractArrayStorageTest {
     public void getAll() {
         Resume[] resumes = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
         Assert.assertArrayEquals(resumes, storage.getAll());
+    }
+
+    private void assertSize(int size) {
+        Assert.assertEquals(size, storage.size());
     }
 }
