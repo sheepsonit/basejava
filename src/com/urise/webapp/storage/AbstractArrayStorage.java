@@ -39,13 +39,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    public void deleteResume(int index) {
+    void deleteResume(int index) {
         deleteResumeByIndex(index);
         storage[size] = null;
         size--;
     }
 
-    public Resume getResume(int index) {
+    Resume getResume(int index) {
         return storage[index];
     }
 
@@ -56,7 +56,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    protected abstract void insertResume(int index, Resume resume);
+    abstract void insertResume(int index, Resume resume);
 
-    protected abstract void deleteResumeByIndex(int index);
+    abstract void deleteResumeByIndex(int index);
 }
