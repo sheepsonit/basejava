@@ -11,11 +11,11 @@ public class ListStorage extends AbstractStorage {
     private Resume[] storage;
     int size = 0;
 
-    ListStorage() {
+    public ListStorage() {
         this(DEFAULT_CAPACITY);
     }
 
-    ListStorage(int initialCapacity) {
+    public ListStorage(int initialCapacity) {
         storage = new Resume[initialCapacity];
     }
 
@@ -68,7 +68,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume getResume(int index) {
+    Resume getResume(int index) {
         return storage[index];
     }
 
