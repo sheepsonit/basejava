@@ -41,14 +41,16 @@ public class ListStorage extends AbstractStorage {
         trimToSize();
     }
 
+
     @Override
-    void setResume(int index, Resume resume, boolean isUpdate) {
-        if (isUpdate) {
-            storage[index] = resume;
-        } else {
-            storage[size] = resume;
-            size++;
-        }
+    void updateResume(int index, Resume resume) {
+        storage[index] = resume;
+    }
+
+    @Override
+    void saveResume(int index, Resume resume) {
+        storage[size] = resume;
+        size++;
     }
 
     @Override

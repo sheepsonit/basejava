@@ -30,13 +30,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    void setResume(int index, Resume resume, boolean isUpdate) {
-        if (isUpdate) {
+    void updateResume(int index, Resume resume) {
             storage[index] = resume;
-        } else {
+    }
+
+    void saveResume(int index, Resume resume) {
             insertResume(index, resume);
             size++;
-        }
     }
 
     void deleteResume(int index) {
