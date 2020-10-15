@@ -13,23 +13,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     Resume[] storage = new Resume[STORAGE_LIMIT];
     int size = 0;
 
-    @Override
     public int size() {
         return size;
     }
 
-    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    @Override
     void updateResume(int index, Resume resume) {
         storage[index] = resume;
     }
 
-    @Override
     void saveResume(int index, Resume resume) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage is overflow", resume.getUuid());
@@ -39,22 +35,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    @Override
-    void deleteResume(int index, String uuid) {
+    void deleteResume(int index) {
         deleteResumeByIndex(index);
         storage[size] = null;
         size--;
     }
 
-    @Override
-    Resume getResume(int index, String uuid) {
+    Resume getResume(int index) {
         return storage[index];
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
