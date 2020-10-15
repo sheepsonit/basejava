@@ -6,6 +6,7 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
+    @Override
     public void update(Resume resume) {
         int indexFoundResume = getIndex(resume.getUuid());
         if (indexFoundResume > -1) {
@@ -15,6 +16,7 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
+    @Override
     public void save(Resume resume) {
             int index = getIndex(resume.getUuid());
             if (index > -1) {
@@ -24,19 +26,21 @@ public abstract class AbstractStorage implements Storage {
             }
     }
 
+    @Override
     public void delete(String uuid) {
         int indexFoundResume = getIndex(uuid);
         if (indexFoundResume > -1) {
-            deleteResume(indexFoundResume);
+            deleteResume(indexFoundResume, uuid);
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
+    @Override
     public Resume get(String uuid) {
         int indexFoundResume = getIndex(uuid);
         if (indexFoundResume > -1) {
-            return getResume(indexFoundResume);
+            return getResume(indexFoundResume, uuid);
         }
         throw new NotExistStorageException(uuid);
     }
@@ -47,8 +51,8 @@ public abstract class AbstractStorage implements Storage {
 
     abstract void saveResume(int index, Resume resume);
 
-    abstract void deleteResume(int index);
+    abstract void deleteResume(int index, String uuid);
 
-    abstract Resume getResume(int index);
+    abstract Resume getResume(int index, String uuid);
 
 }
