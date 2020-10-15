@@ -17,26 +17,22 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    @Override
-    boolean checkSize(String uuid) {
-        if (size == STORAGE_LIMIT) {
-            throw new StorageException("Storage is overflow", uuid);
-        }
-        return true;
-    }
-
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     void updateResume(int index, Resume resume) {
-            storage[index] = resume;
+        storage[index] = resume;
     }
 
     void saveResume(int index, Resume resume) {
+        if (size == STORAGE_LIMIT) {
+            throw new StorageException("Storage is overflow", resume.getUuid());
+        } else {
             insertResume(index, resume);
             size++;
+        }
     }
 
     void deleteResume(int index) {

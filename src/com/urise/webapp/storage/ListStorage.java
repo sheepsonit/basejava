@@ -14,12 +14,6 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-
-    @Override
-    boolean checkSize(String uuid) {
-        return true;
-    }
-
     @Override
     public void clear() {
         storage.clear();

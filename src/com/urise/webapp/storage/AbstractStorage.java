@@ -16,14 +16,12 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void save(Resume resume) {
-        if (checkSize(resume.getUuid())) {
             int index = getIndex(resume.getUuid());
             if (index > -1) {
                 throw new ExistStorageException(resume.getUuid());
             } else {
                 saveResume(index, resume);
             }
-        }
     }
 
     public void delete(String uuid) {
@@ -42,9 +40,6 @@ public abstract class AbstractStorage implements Storage {
         }
         throw new NotExistStorageException(uuid);
     }
-
-
-    abstract boolean checkSize(String uuid);
 
     abstract int getIndex(String uuid);
 
