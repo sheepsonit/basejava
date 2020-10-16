@@ -71,8 +71,8 @@ public abstract class AbstractArrayStorageTest {
                 Resume resume = new Resume("uuid" + (i + 1));
                 storage.save(resume);
             }
-        } catch (Exception e) {
-            Assert.fail();
+        } catch (StorageException e) {
+            Assert.fail("Error while saving to storage");
         }
         storage.save(new Resume("uuid" + (storage.size() + 1)));
     }
