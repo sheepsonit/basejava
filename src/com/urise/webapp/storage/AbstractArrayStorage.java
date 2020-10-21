@@ -42,8 +42,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     void deleteResume(int searchKey, String uuid) {
         deleteResumeByIndex(searchKey);
-        storage[size] = null;
-        size--;
+        storage[--size] = null;
+//        size--;
     }
 
     @Override

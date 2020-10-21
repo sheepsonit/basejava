@@ -3,9 +3,10 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -29,7 +30,7 @@ public abstract class AbstractStorageTest {
     }
 
 
-   private void assertSize(int size) {
+    private void assertSize(int size) {
         assertEquals(size, storage.size());
     }
 
@@ -48,7 +49,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume resume = new Resume(UUID_2);
         storage.update(resume);
-        Assert.assertEquals(storage.get(UUID_2), resume);
+        assertEquals(resume, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -60,7 +61,7 @@ public abstract class AbstractStorageTest {
     public void save() {
         Resume resume = new Resume("uuid4");
         storage.save(resume);
-        Assert.assertEquals(resume, storage.get(resume.getUuid()));
+        assertEquals(resume, storage.get(resume.getUuid()));
         assertSize(4);
     }
 
@@ -96,6 +97,6 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAll() {
         Resume[] expectedResumes = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
-        assertArrayEquals(expectedResumes, storage.getAll());
+        assertArrayEquals(expectedResumes, Arrays.stream(storage.getAll()).sorted().toArray());
     }
 }
