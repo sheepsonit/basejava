@@ -29,11 +29,6 @@ public abstract class AbstractStorageTest {
         storage.save(new Resume(UUID_3));
     }
 
-
-    private void assertSize(int size) {
-        assertEquals(size, storage.size());
-    }
-
     @Test
     public void size() {
         assertSize(3);
@@ -97,6 +92,12 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAll() {
         Resume[] expectedResumes = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
-        assertArrayEquals(expectedResumes, Arrays.stream(storage.getAll()).sorted().toArray());
+        Resume[] actualResumes = storage.getAll();
+        Arrays.sort(actualResumes);
+        assertArrayEquals(expectedResumes, actualResumes);
+    }
+
+    private void assertSize(int size) {
+        assertEquals(size, storage.size());
     }
 }
