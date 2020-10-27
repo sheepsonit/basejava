@@ -6,45 +6,49 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
+    abstract Object getSearchKey(String uuid);
+
+    abstract void updateResume(Object searchKey, Resume resume);
+
+    abstract void saveResume(Object searchKey, Resume resume);
+
+    abstract void deleteResume(Object searchKey, String uuid);
+
+    abstract Resume getResume(Object searchKey, String uuid);
+
+    abstract boolean isExist(Object searchKey);
+
     @Override
     public void update(Resume resume) {
-        updateResume(checkExist(resume.getUuid()), resume);
+        updateResume(getExistedKey(resume.getUuid()), resume);
     }
 
     @Override
     public void save(Resume resume) {
-        int searchKey = getIndex(resume.getUuid());
-        if (searchKey > -1) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            saveResume(searchKey, resume);
-        }
+        saveResume(getNotExistedKey(resume.getUuid()), resume);
     }
 
     @Override
     public void delete(String uuid) {
-        deleteResume(checkExist(uuid), uuid);
+        deleteResume(getExistedKey(uuid), uuid);
     }
 
     @Override
     public Resume get(String uuid) {
-        return getResume(checkExist(uuid), uuid);
+        return getResume(getExistedKey(uuid), uuid);
     }
 
-    abstract int getIndex(String uuid);
-
-    abstract void updateResume(int searchKey, Resume resume);
-
-    abstract void saveResume(int searchKey, Resume resume);
-
-    abstract void deleteResume(int searchKey, String uuid);
-
-    abstract Resume getResume(int searchKey, String uuid);
-
-    private int checkExist(String uuid) {
-        int searchKey = getIndex(uuid);
-        if (searchKey < 0)
+    private Object getExistedKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey))
             throw new NotExistStorageException(uuid);
+        return searchKey;
+    }
+
+    private Object getNotExistedKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey))
+            throw new ExistStorageException(uuid);
         return searchKey;
     }
 }
