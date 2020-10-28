@@ -4,33 +4,33 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage {
 
     private Map<String, Resume> storage = new HashMap<>();
 
     @Override
     String getSearchKey(String uuid) {
-        return storage.containsKey(uuid) ? uuid : null;
+        return storage.containsKey(uuid) ? storage.get(uuid).getFullName() : null;
     }
 
     @Override
     void updateResume(Object searchKey, Resume resume) {
-        storage.replace(resume.getUuid(), resume);
+        storage.replace((String) searchKey, resume);
     }
 
     @Override
     void saveResume(Object searchKey, Resume resume) {
-        storage.put(resume.getUuid(), resume);
+        storage.put((String) searchKey, resume);
     }
 
     @Override
     void deleteResume(Object searchKey, String uuid) {
-        storage.remove(uuid);
+        storage.remove(searchKey);
     }
 
     @Override
     Resume getResume(Object searchKey, String uuid) {
-        return storage.get(uuid);
+        return storage.get(searchKey);
     }
 
     @Override
