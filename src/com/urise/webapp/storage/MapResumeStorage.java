@@ -9,8 +9,8 @@ public class MapResumeStorage extends AbstractStorage {
     private Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    String getSearchKey(String uuid) {
-        return storage.containsKey(uuid) ? storage.get(uuid).getFullName() : null;
+    Integer getSearchKey(String uuid) {
+        return storage.containsKey(uuid) ? storage.get(uuid).hashCode() : null;
     }
 
     @Override
@@ -34,6 +34,11 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
+    List<Resume> getResumes() {
+        return new ArrayList<>(storage.values());
+    }
+
+    @Override
     boolean isExist(Object searchKey) {
         return searchKey != null;
     }
@@ -41,13 +46,6 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>(storage.values());
-        resumes.sort(Comparator.comparing(Resume::getFullName));
-        return resumes;
     }
 
     @Override

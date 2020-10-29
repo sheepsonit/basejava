@@ -11,12 +11,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     Integer getSearchKey(String uuid) {
-        return Arrays.binarySearch(storage, 0, size, new Resume(uuid), RESUME_COMPARATOR);
+        return Arrays.binarySearch(storage, 0, size, new Resume(uuid, "fullName_" + uuid), RESUME_COMPARATOR);
     }
 
     @Override
     void insertResume(int searchKey, Resume resume) {
-        int indexInsert = -(Integer)searchKey - 1;
+        int indexInsert = -(Integer) searchKey - 1;
         System.arraycopy(storage, indexInsert, storage, indexInsert + 1, size - indexInsert);
         storage[indexInsert] = resume;
     }

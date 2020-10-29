@@ -3,7 +3,6 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -23,7 +22,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     void updateResume(Object searchKey, Resume resume) {
-        storage.set((Integer)searchKey, resume);
+        storage.set((Integer) searchKey, resume);
     }
 
     @Override
@@ -33,7 +32,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     void deleteResume(Object searchKey, String uuid) {
-        storage.remove(((Integer)searchKey).intValue());
+        storage.remove(((Integer) searchKey).intValue());
     }
 
     @Override
@@ -47,17 +46,16 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     Resume getResume(Object searchKey, String uuid) {
-        return storage.get((Integer)searchKey);
+        return storage.get((Integer) searchKey);
+    }
+
+    @Override
+    List<Resume> getResumes() {
+        return storage;
     }
 
     @Override
     boolean isExist(Object searchKey) {
         return searchKey != null;
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        storage.sort(Comparator.comparing(Resume::getFullName));
-        return storage;
     }
 }
