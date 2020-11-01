@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         } catch (StorageException e) {
             Assert.fail("Error while saving to storage");
         }
-        storage.save(new Resume("uuid" + (storage.size() + 1),"fullName_uuid" + (storage.size() + 1)));
+        storage.save(new Resume("uuid" + (storage.size() + 1), "fullName_overflow"));
     }
 
 }
