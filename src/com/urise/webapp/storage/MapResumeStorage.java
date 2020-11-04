@@ -10,31 +10,27 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     Resume getSearchKey(String uuid) {
-        return storage.getOrDefault(uuid, new Resume(uuid, null));
+        return storage.get(uuid);
     }
 
     @Override
     void updateResume(Object searchKey, Resume resume) {
-        Resume keyResume = (Resume) searchKey;
-        storage.replace(keyResume.getUuid(), resume);
+        storage.replace(resume.getUuid(), resume);
     }
 
     @Override
     void saveResume(Object searchKey, Resume resume) {
-        Resume keyResume = (Resume) searchKey;
-        storage.put(keyResume.getUuid(), resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     void deleteResume(Object searchKey, String uuid) {
-        Resume keyResume = (Resume) searchKey;
-        storage.remove(keyResume.getUuid());
+        storage.remove(uuid);
     }
 
     @Override
     Resume getResume(Object searchKey, String uuid) {
-        Resume keyResume = (Resume) searchKey;
-        return storage.get(keyResume.getUuid());
+        return (Resume) searchKey;
     }
 
     @Override
@@ -44,8 +40,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     boolean isExist(Object searchKey) {
-        Resume resumeKey = (Resume) searchKey;
-        return resumeKey.getFullName() != null;
+        return searchKey != null;
     }
 
     @Override
