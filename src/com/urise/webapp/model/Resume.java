@@ -1,7 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -12,6 +11,10 @@ public class Resume {
     private final String uuid;
 
     private String fullName;
+
+    private Map<ContactType, String> contacts = new HashMap<>();
+
+    private Map<SectionType, Section> sections = new HashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -30,6 +33,22 @@ public class Resume {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void addContact(ContactType contactType, String contact) {
+        contacts.put(contactType, contact);
+    }
+
+    public void addContacts(Map<ContactType, String> contacts) {
+        this.contacts.putAll(contacts);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public void setSections(Map<SectionType, Section> sections) {
+        this.sections.putAll(sections);
     }
 
     @Override
