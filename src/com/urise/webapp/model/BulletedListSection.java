@@ -7,8 +7,7 @@ public class BulletedListSection implements Section<List<String>> {
 
     private List<String> list = new ArrayList<>();
 
-    @Override
-    public void setContent(List<String> content) {
+    public BulletedListSection(List<String> content) {
         list.addAll(content);
     }
 

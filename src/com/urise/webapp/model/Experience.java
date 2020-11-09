@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 import java.time.YearMonth;
 
-public class TableSection {
+public class Experience {
 
     private String organization;
 
@@ -14,11 +14,12 @@ public class TableSection {
 
     private String note;
 
-    public TableSection(String organization, YearMonth dateStart, YearMonth dateEnd, String mainInfo) {
+    public Experience(String organization, YearMonth dateStart, YearMonth dateEnd, String mainInfo, String note) {
         this.organization = organization;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.mainInfo = mainInfo;
+        this.note = note;
     }
 
     public String getOrganization() {
@@ -39,9 +40,5 @@ public class TableSection {
 
     public String getNote() {
         return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 }

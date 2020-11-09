@@ -4,8 +4,7 @@ public class TextSection implements Section<String> {
 
     private String textContent;
 
-    @Override
-    public void setContent(String content) {
+    public TextSection(String content) {
         this.textContent = content;
     }
 

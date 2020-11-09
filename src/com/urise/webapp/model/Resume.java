@@ -22,8 +22,8 @@ public class Resume {
 
     public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid must not be null");
-        this.uuid = uuid;
         Objects.requireNonNull(fullName, "fullName must not be null");
+        this.uuid = uuid;
         this.fullName = fullName;
     }
 
@@ -51,6 +51,15 @@ public class Resume {
         this.sections.putAll(sections);
     }
 
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    @Override
+    public String toString() {
+        return uuid + '(' + fullName + ')';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,18 +68,17 @@ public class Resume {
         Resume resume = (Resume) o;
 
         if (!uuid.equals(resume.uuid)) return false;
-        return fullName.equals(resume.fullName);
+        if (!fullName.equals(resume.fullName)) return false;
+        if (!Objects.equals(contacts, resume.contacts)) return false;
+        return Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
+        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
+        result = 31 * result + (sections != null ? sections.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return uuid + '(' + fullName + ')';
     }
 }
