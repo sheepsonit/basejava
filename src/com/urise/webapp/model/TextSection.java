@@ -1,6 +1,6 @@
 package com.urise.webapp.model;
 
-public class TextSection implements Section<String> {
+public class TextSection implements Section {
 
     private String textContent;
 

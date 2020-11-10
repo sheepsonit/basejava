@@ -3,7 +3,7 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BulletedListSection implements Section<List<String>> {
+public class BulletedListSection implements Section {
 
     private List<String> list = new ArrayList<>();
 

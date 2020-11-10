@@ -21,10 +21,10 @@ public class ResumeTestData {
 
         Map<SectionType, Section> sectionsList = new HashMap<>();
 
-        Section<String> position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        Section position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sectionsList.put(SectionType.OBJECTIVE, position);
 
-        Section<String> personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        Section personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
         sectionsList.put(SectionType.PERSONAL, personal);
 
 
@@ -45,9 +45,9 @@ public class ResumeTestData {
                 "Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django).");
         listAchievements.add("Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), " +
                 "Белоруcсии(Erip, Osmp) и Никарагуа.");
-        Section<List<String>> achievement = new BulletedListSection(listAchievements);
-        sectionsList.put(SectionType.ACHIEVEMENT, achievement);
 
+        Section achievement = new BulletedListSection(listAchievements);
+        sectionsList.put(SectionType.ACHIEVEMENT, achievement);
 
         List<String> listQualifications = new ArrayList<>();
         listQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -67,7 +67,8 @@ public class ResumeTestData {
         listQualifications.add("администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer.");
         listQualifications.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         listQualifications.add("Родной русский, английский \"upper intermediate\"");
-        Section<List<String>> qualification = new BulletedListSection(listQualifications);
+
+        Section qualification = new BulletedListSection(listQualifications);
         sectionsList.put(SectionType.QUALIFICATION, qualification);
 
         List<Experience> listExperiences = new ArrayList<>();
@@ -138,7 +139,7 @@ public class ResumeTestData {
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
         listExperiences.add(sectionExp8);
 
-        Section<List<Experience>> experience = new OrganizationSection(listExperiences);
+        Section experience = new OrganizationSection(listExperiences);
         sectionsList.put(SectionType.EXPERIENCE, experience);
 
         List<Experience> educations = new ArrayList<>();
@@ -192,7 +193,7 @@ public class ResumeTestData {
                 "");
         educations.add(sectionEducation7);
 
-        Section<List<Experience>> education = new OrganizationSection(educations);
+        Section education = new OrganizationSection(educations);
         sectionsList.put(SectionType.EDUCATION, education);
 
         resume.setSections(sectionsList);
@@ -203,6 +204,8 @@ public class ResumeTestData {
         for (Map.Entry<ContactType, String> contactEntry : resume.getContacts().entrySet()) {
             System.out.println(contactEntry.getKey().getTitle() + " : " + contactEntry.getValue());
         }
+
+        System.out.println();
 
         for (Map.Entry<SectionType, Section> sectionEntry : resume.getSections().entrySet()) {
             String sectionTitle = sectionEntry.getKey().getTitle();
