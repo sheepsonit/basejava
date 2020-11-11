@@ -2,17 +2,38 @@ package com.urise.webapp.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class BulletedListSection implements Section {
+public class BulletedListSection extends Section {
 
     private List<String> list = new ArrayList<>();
 
     public BulletedListSection(List<String> content) {
+        Objects.requireNonNull(content, "list must not be null");
         list.addAll(content);
     }
 
-    @Override
     public List<String> getContent() {
         return list;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BulletedListSection that = (BulletedListSection) o;
+
+        return Objects.equals(list, that.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return list != null ? list.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }

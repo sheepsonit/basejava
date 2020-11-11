@@ -74,13 +74,15 @@ public class ResumeTestData {
         List<Experience> listExperiences = new ArrayList<>();
 
         Experience sectionExp1 = new Experience("Java Online Projects",
+                "",
                 YearMonth.of(2013, 10),
-                null,
+                YearMonth.now(),
                 "Автор проекта.",
                 "Создание, организация и проведение Java онлайн проектов и стажировок.");
         listExperiences.add(sectionExp1);
 
         Experience sectionExp2 = new Experience("Wrike",
+                "",
                 YearMonth.of(2014, 10),
                 YearMonth.of(2016, 1),
                 "Старший разработчик (backend)",
@@ -89,6 +91,7 @@ public class ResumeTestData {
         listExperiences.add(sectionExp2);
 
         Experience sectionExp3 = new Experience("RIT Center",
+                "",
                 YearMonth.of(2012, 4),
                 YearMonth.of(2014, 10),
                 "Java архитектор",
@@ -101,6 +104,7 @@ public class ResumeTestData {
         listExperiences.add(sectionExp3);
 
         Experience sectionExp4 = new Experience("Luxoft (Deutsche Bank)",
+                "",
                 YearMonth.of(2010, 12),
                 YearMonth.of(2012, 4),
                 "Ведущий программист",
@@ -110,6 +114,7 @@ public class ResumeTestData {
         listExperiences.add(sectionExp4);
 
         Experience sectionExp5 = new Experience("Yota",
+                "",
                 YearMonth.of(2008, 6),
                 YearMonth.of(2010, 12),
                 "Ведущий специалист",
@@ -119,6 +124,7 @@ public class ResumeTestData {
         listExperiences.add(sectionExp5);
 
         Experience sectionExp6 = new Experience("Enkata",
+                "",
                 YearMonth.of(2007, 3),
                 YearMonth.of(2008, 6),
                 "Разработчик ПО",
@@ -126,6 +132,7 @@ public class ResumeTestData {
         listExperiences.add(sectionExp6);
 
         Experience sectionExp7 = new Experience("Siemens AG",
+                "",
                 YearMonth.of(2005, 1),
                 YearMonth.of(2007, 2),
                 "Разработчик ПО",
@@ -133,6 +140,7 @@ public class ResumeTestData {
         listExperiences.add(sectionExp7);
 
         Experience sectionExp8 = new Experience("Alcatel",
+                "",
                 YearMonth.of(1997, 9),
                 YearMonth.of(2005, 1),
                 "Инженер по аппаратному и программному тестированию",
@@ -145,6 +153,7 @@ public class ResumeTestData {
         List<Experience> educations = new ArrayList<>();
 
         Experience sectionEducation1 = new Experience("Coursera",
+                "",
                 YearMonth.of(2013, 3),
                 YearMonth.of(2013, 5),
                 "\"Functional Programming Principles in Scala\" by Martin Odersky",
@@ -152,6 +161,7 @@ public class ResumeTestData {
         educations.add(sectionEducation1);
 
         Experience sectionEducation2 = new Experience("Luxoft",
+                "",
                 YearMonth.of(2011, 3),
                 YearMonth.of(2011, 4),
                 "\"Functional Programming Principles in Scala\" by Martin Odersky",
@@ -159,6 +169,7 @@ public class ResumeTestData {
         educations.add(sectionEducation2);
 
         Experience sectionEducation3 = new Experience("Siemens AG",
+                "",
                 YearMonth.of(2005, 1),
                 YearMonth.of(2005, 4),
                 "3 месяца обучения мобильным IN сетям (Берлин)",
@@ -166,6 +177,7 @@ public class ResumeTestData {
         educations.add(sectionEducation3);
 
         Experience sectionEducation4 = new Experience("Alcatel",
+                "",
                 YearMonth.of(1997, 9),
                 YearMonth.of(1998, 3),
                 "6 месяцев обучения цифровым телефонным сетям (Москва)",
@@ -173,6 +185,7 @@ public class ResumeTestData {
         educations.add(sectionEducation4);
 
         Experience sectionEducation5 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                "",
                 YearMonth.of(1993, 9),
                 YearMonth.of(1996, 7),
                 "Аспирантура (программист С, С++)",
@@ -180,6 +193,7 @@ public class ResumeTestData {
         educations.add(sectionEducation5);
 
         Experience sectionEducation6 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                "",
                 YearMonth.of(1987, 9),
                 YearMonth.of(1993, 7),
                 "Инженер (программист Fortran, C)",
@@ -187,6 +201,7 @@ public class ResumeTestData {
         educations.add(sectionEducation6);
 
         Experience sectionEducation7 = new Experience("Заочная физико-техническая школа при МФТИ",
+                "",
                 YearMonth.of(1984, 9),
                 YearMonth.of(1987, 6),
                 "Закончил с отличием",
@@ -201,33 +216,32 @@ public class ResumeTestData {
         System.out.println(resume.getFullName());
         System.out.println();
 
-        for (Map.Entry<ContactType, String> contactEntry : resume.getContacts().entrySet()) {
-            System.out.println(contactEntry.getKey().getTitle() + " : " + contactEntry.getValue());
+        for (ContactType contactType : ContactType.values()) {
+            System.out.println(contactType.getTitle() + " : " + resume.getContact(contactType));
         }
 
         System.out.println();
 
-        for (Map.Entry<SectionType, Section> sectionEntry : resume.getSections().entrySet()) {
-            String sectionTitle = sectionEntry.getKey().getTitle();
-            System.out.println(sectionTitle);
+        for (SectionType sectionType : SectionType.values()) {
+            System.out.println(sectionType.getTitle());
             System.out.println();
 
-            if (sectionTitle.equals("Личные качества") || sectionTitle.equals("Позиция")) {
-                System.out.println(sectionEntry.getValue().getContent().toString());
+            if (sectionType.getTitle().equals("Личные качества") || sectionType.getTitle().equals("Позиция")) {
+                System.out.println(((TextSection) resume.getSection(sectionType)).getContent());
             }
 
-            if (sectionTitle.equals("Достижения") || sectionTitle.equals("Квалификация")) {
-                List<String> bulletedList = (List<String>) sectionEntry.getValue().getContent();
+            if (sectionType.getTitle().equals("Достижения") || sectionType.getTitle().equals("Квалификация")) {
+                List<String> bulletedList = ((BulletedListSection) resume.getSection(sectionType)).getContent();
                 for (String str : bulletedList) {
                     System.out.println("- " + str);
                 }
             }
 
-            if (sectionTitle.equals("Опыт работы") || sectionTitle.equals("Образование")) {
-                List<Experience> bulletedList = (List<Experience>) sectionEntry.getValue().getContent();
+            if (sectionType.getTitle().equals("Опыт работы") || sectionType.getTitle().equals("Образование")) {
+                List<Experience> bulletedList = ((OrganizationSection) resume.getSection(sectionType)).getContent();
                 for (Experience exp : bulletedList) {
                     System.out.println(exp.getOrganization());
-                    System.out.println(exp.getDateStart().format(DateTimeFormatter.ofPattern("MM/yyyy")) + " - " + (exp.getDateEnd() == null ? "по настоящее время" : exp.getDateEnd().format(DateTimeFormatter.ofPattern("MM/yyyy"))));
+                    System.out.println(exp.getDateStart().format(DateTimeFormatter.ofPattern("MM/yyyy")) + " - " + exp.getDateEnd().format(DateTimeFormatter.ofPattern("MM/yyyy")));
                     System.out.println(exp.getMainInfo());
                     System.out.println(exp.getNote());
                     System.out.println();

@@ -1,5 +1,4 @@
 package com.urise.webapp.model;
 
-public interface Section {
-    Object getContent();
+abstract public class Section {
 }

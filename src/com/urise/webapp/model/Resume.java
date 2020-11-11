@@ -10,11 +10,11 @@ public class Resume {
     // Unique identifier
     private final String uuid;
 
-    private String fullName;
+    private final String fullName;
 
-    private Map<ContactType, String> contacts = new HashMap<>();
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
-    private Map<SectionType, Section> sections = new HashMap<>();
+    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -43,16 +43,16 @@ public class Resume {
         this.contacts.putAll(contacts);
     }
 
-    public Map<ContactType, String> getContacts() {
-        return contacts;
+    public String getContact(ContactType contactType) {
+        return contacts.get(contactType);
     }
 
     public void setSections(Map<SectionType, Section> sections) {
         this.sections.putAll(sections);
     }
 
-    public Map<SectionType, Section> getSections() {
-        return sections;
+    public Section getSection(SectionType sectionType) {
+        return sections.get(sectionType);
     }
 
     @Override
