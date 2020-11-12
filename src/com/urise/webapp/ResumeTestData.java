@@ -73,26 +73,30 @@ public class ResumeTestData {
 
         List<Experience> listExperiences = new ArrayList<>();
 
-        Experience sectionExp1 = new Experience("Java Online Projects",
-                "",
-                YearMonth.of(2013, 10),
+        List<DateIntervalExperience> intervalExperiences1 = new ArrayList<>();
+        intervalExperiences1.add(new DateIntervalExperience(YearMonth.of(2013, 10),
                 YearMonth.now(),
                 "Автор проекта.",
-                "Создание, организация и проведение Java онлайн проектов и стажировок.");
+                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+
+        Experience sectionExp1 = new Experience("Java Online Projects",
+                "",
+                intervalExperiences1);
         listExperiences.add(sectionExp1);
 
-        Experience sectionExp2 = new Experience("Wrike",
-                "",
-                YearMonth.of(2014, 10),
+        List<DateIntervalExperience> intervalExperiences2 = new ArrayList<>();
+        intervalExperiences2.add(new DateIntervalExperience(YearMonth.of(2014, 10),
                 YearMonth.of(2016, 1),
                 "Старший разработчик (backend)",
                 "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                        "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+                        "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        Experience sectionExp2 = new Experience("Wrike",
+                "",
+                intervalExperiences2);
         listExperiences.add(sectionExp2);
 
-        Experience sectionExp3 = new Experience("RIT Center",
-                "",
-                YearMonth.of(2012, 4),
+        List<DateIntervalExperience> intervalExperiences3 = new ArrayList<>();
+        intervalExperiences3.add(new DateIntervalExperience(YearMonth.of(2012, 4),
                 YearMonth.of(2014, 10),
                 "Java архитектор",
                 "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), " +
@@ -100,51 +104,74 @@ public class ResumeTestData {
                         "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), " +
                         "сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
                         "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, " +
-                        "Unix shell remote scripting via ssh tunnels, PL/Python");
+                        "Unix shell remote scripting via ssh tunnels, PL/Python"));
+
+        Experience sectionExp3 = new Experience("RIT Center",
+                "",
+                intervalExperiences3);
         listExperiences.add(sectionExp3);
 
-        Experience sectionExp4 = new Experience("Luxoft (Deutsche Bank)",
-                "",
-                YearMonth.of(2010, 12),
+        List<DateIntervalExperience> intervalExperiences4 = new ArrayList<>();
+        intervalExperiences4.add(new DateIntervalExperience(YearMonth.of(2010, 12),
                 YearMonth.of(2012, 4),
                 "Ведущий программист",
                 "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). " +
                         "Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов " +
-                        "в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.");
+                        "в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."));
+
+        Experience sectionExp4 = new Experience("Luxoft (Deutsche Bank)",
+                "",
+                intervalExperiences4);
         listExperiences.add(sectionExp4);
 
-        Experience sectionExp5 = new Experience("Yota",
-                "",
+        List<DateIntervalExperience> intervalExperiences5 = new ArrayList<>();
+        intervalExperiences5.add(new DateIntervalExperience(
                 YearMonth.of(2008, 6),
                 YearMonth.of(2010, 12),
                 "Ведущий специалист",
                 "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, " +
                         "JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента " +
-                        "(Python/ Jython, Django, ExtJS)");
+                        "(Python/ Jython, Django, ExtJS)"));
+
+        Experience sectionExp5 = new Experience("Yota",
+                "",
+                intervalExperiences5);
         listExperiences.add(sectionExp5);
 
-        Experience sectionExp6 = new Experience("Enkata",
-                "",
+        List<DateIntervalExperience> intervalExperiences6 = new ArrayList<>();
+        intervalExperiences6.add(new DateIntervalExperience(
                 YearMonth.of(2007, 3),
                 YearMonth.of(2008, 6),
                 "Разработчик ПО",
-                "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining).");
+                "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining)."));
+
+        Experience sectionExp6 = new Experience("Enkata",
+                "",
+                intervalExperiences6);
         listExperiences.add(sectionExp6);
 
-        Experience sectionExp7 = new Experience("Siemens AG",
-                "",
+        List<DateIntervalExperience> intervalExperiences7 = new ArrayList<>();
+        intervalExperiences7.add(new DateIntervalExperience(
                 YearMonth.of(2005, 1),
                 YearMonth.of(2007, 2),
                 "Разработчик ПО",
-                "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix).");
+                "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix)."));
+
+        Experience sectionExp7 = new Experience("Siemens AG",
+                "",
+                intervalExperiences7);
         listExperiences.add(sectionExp7);
 
-        Experience sectionExp8 = new Experience("Alcatel",
-                "",
+        List<DateIntervalExperience> intervalExperiences8 = new ArrayList<>();
+        intervalExperiences8.add(new DateIntervalExperience(
                 YearMonth.of(1997, 9),
                 YearMonth.of(2005, 1),
                 "Инженер по аппаратному и программному тестированию",
-                "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
+                "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."));
+
+        Experience sectionExp8 = new Experience("Alcatel",
+                "",
+                intervalExperiences8);
         listExperiences.add(sectionExp8);
 
         Section experience = new OrganizationSection(listExperiences);
@@ -152,61 +179,82 @@ public class ResumeTestData {
 
         List<Experience> educations = new ArrayList<>();
 
-        Experience sectionEducation1 = new Experience("Coursera",
-                "",
+        List<DateIntervalExperience> intervalEducation1 = new ArrayList<>();
+        intervalEducation1.add(new DateIntervalExperience(
                 YearMonth.of(2013, 3),
                 YearMonth.of(2013, 5),
                 "\"Functional Programming Principles in Scala\" by Martin Odersky",
-                "");
+                ""));
+
+        Experience sectionEducation1 = new Experience("Coursera",
+                "",
+                intervalEducation1);
         educations.add(sectionEducation1);
 
-        Experience sectionEducation2 = new Experience("Luxoft",
-                "",
+        List<DateIntervalExperience> intervalEducation2 = new ArrayList<>();
+        intervalEducation2.add(new DateIntervalExperience(
                 YearMonth.of(2011, 3),
                 YearMonth.of(2011, 4),
                 "\"Functional Programming Principles in Scala\" by Martin Odersky",
-                "");
+                ""));
+
+        Experience sectionEducation2 = new Experience("Luxoft",
+                "",
+                intervalEducation2);
         educations.add(sectionEducation2);
 
-        Experience sectionEducation3 = new Experience("Siemens AG",
-                "",
+        List<DateIntervalExperience> intervalEducation3 = new ArrayList<>();
+        intervalEducation3.add(new DateIntervalExperience(
                 YearMonth.of(2005, 1),
                 YearMonth.of(2005, 4),
                 "3 месяца обучения мобильным IN сетям (Берлин)",
-                "");
+                ""));
+
+        Experience sectionEducation3 = new Experience("Siemens AG",
+                "",
+                intervalEducation3);
         educations.add(sectionEducation3);
 
-        Experience sectionEducation4 = new Experience("Alcatel",
-                "",
+        List<DateIntervalExperience> intervalEducation4 = new ArrayList<>();
+        intervalEducation4.add(new DateIntervalExperience(
                 YearMonth.of(1997, 9),
                 YearMonth.of(1998, 3),
                 "6 месяцев обучения цифровым телефонным сетям (Москва)",
-                "");
+                ""));
+
+        Experience sectionEducation4 = new Experience("Alcatel",
+                "",
+                intervalEducation4);
         educations.add(sectionEducation4);
 
-        Experience sectionEducation5 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-                "",
+        List<DateIntervalExperience> intervalEducation5 = new ArrayList<>();
+        intervalEducation5.add(new DateIntervalExperience(
                 YearMonth.of(1993, 9),
                 YearMonth.of(1996, 7),
                 "Аспирантура (программист С, С++)",
-                "");
-        educations.add(sectionEducation5);
-
-        Experience sectionEducation6 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-                "",
+                ""));
+        intervalEducation5.add(new DateIntervalExperience(
                 YearMonth.of(1987, 9),
                 YearMonth.of(1993, 7),
                 "Инженер (программист Fortran, C)",
-                "");
-        educations.add(sectionEducation6);
+                ""));
 
-        Experience sectionEducation7 = new Experience("Заочная физико-техническая школа при МФТИ",
+        Experience sectionEducation5 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
                 "",
+                intervalEducation5);
+        educations.add(sectionEducation5);
+
+        List<DateIntervalExperience> intervalEducation6 = new ArrayList<>();
+        intervalEducation6.add(new DateIntervalExperience(
                 YearMonth.of(1984, 9),
                 YearMonth.of(1987, 6),
                 "Закончил с отличием",
-                "");
-        educations.add(sectionEducation7);
+                ""));
+
+        Experience sectionEducation6 = new Experience("Заочная физико-техническая школа при МФТИ",
+                "",
+                intervalEducation6);
+        educations.add(sectionEducation6);
 
         Section education = new OrganizationSection(educations);
         sectionsList.put(SectionType.EDUCATION, education);
@@ -241,9 +289,11 @@ public class ResumeTestData {
                 List<Experience> bulletedList = ((OrganizationSection) resume.getSection(sectionType)).getContent();
                 for (Experience exp : bulletedList) {
                     System.out.println(exp.getOrganization());
-                    System.out.println(exp.getDateStart().format(DateTimeFormatter.ofPattern("MM/yyyy")) + " - " + exp.getDateEnd().format(DateTimeFormatter.ofPattern("MM/yyyy")));
-                    System.out.println(exp.getMainInfo());
-                    System.out.println(exp.getNote());
+                    for (DateIntervalExperience dates: exp.getDates()) {
+                        System.out.println(dates.getDateStart().format(DateTimeFormatter.ofPattern("MM/yyyy")) + " - " + dates.getDateEnd().format(DateTimeFormatter.ofPattern("MM/yyyy")));
+                        System.out.println(dates.getMainInfo());
+                        System.out.println(dates.getNote());
+                    }
                     System.out.println();
                 }
             }

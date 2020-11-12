@@ -1,49 +1,25 @@
 package com.urise.webapp.model;
 
-import java.time.YearMonth;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Experience {
 
     private Link organization;
 
-    private YearMonth dateStart;
+    private List<DateIntervalExperience> dates = new ArrayList<>();
 
-    private YearMonth dateEnd;
-
-    private String mainInfo;
-
-    private String note;
-
-    public Experience(String organizationName, String url, YearMonth dateStart, YearMonth dateEnd, String mainInfo, String note) {
-        Objects.requireNonNull(dateStart, "dateStart must not be null");
-        Objects.requireNonNull(dateEnd, "dateEnd must not be null");
-        Objects.requireNonNull(mainInfo, "mainInfo must not be null");
+    public Experience(String organizationName, String url, List<DateIntervalExperience> intervalsOfExperience) {
         this.organization = new Link(organizationName, url);
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        this.mainInfo = mainInfo;
-        this.note = note;
+        this.dates.addAll(intervalsOfExperience);
     }
 
     public Link getOrganization() {
         return organization;
     }
 
-    public YearMonth getDateStart() {
-        return dateStart;
-    }
-
-    public YearMonth getDateEnd() {
-        return dateEnd;
-    }
-
-    public String getMainInfo() {
-        return mainInfo;
-    }
-
-    public String getNote() {
-        return note;
+    public List<DateIntervalExperience> getDates() {
+        return dates;
     }
 
     @Override
@@ -54,30 +30,13 @@ public class Experience {
         Experience that = (Experience) o;
 
         if (!organization.equals(that.organization)) return false;
-        if (!dateStart.equals(that.dateStart)) return false;
-        if (!dateEnd.equals(that.dateEnd)) return false;
-        if (!mainInfo.equals(that.mainInfo)) return false;
-        return Objects.equals(note, that.note);
+        return dates.equals(that.dates);
     }
 
     @Override
     public int hashCode() {
         int result = organization.hashCode();
-        result = 31 * result + dateStart.hashCode();
-        result = 31 * result + dateEnd.hashCode();
-        result = 31 * result + mainInfo.hashCode();
-        result = 31 * result + (note != null ? note.hashCode() : 0);
+        result = 31 * result + dates.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Experience{" +
-                "organization=" + organization +
-                ", dateStart=" + dateStart +
-                ", dateEnd=" + dateEnd +
-                ", mainInfo='" + mainInfo + '\'' +
-                ", note='" + note + '\'' +
-                '}';
     }
 }
