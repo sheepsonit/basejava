@@ -5,11 +5,136 @@ import com.urise.webapp.model.*;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
+
+    public static Resume setupResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+        StringBuilder phoneNumber = new StringBuilder("+7(9");
+        for (int i = 0; i < 9; i++) {
+            if (i == 2)
+                phoneNumber.append(") ");
+            if (i == 5)
+                phoneNumber.append("-");
+            phoneNumber.append((int) (0 + Math.random() * 10));
+        }
+        System.out.println(phoneNumber);
+        resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
+        resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
+        Map<SectionType, Section> sectionsList = new EnumMap<>(SectionType.class);
+
+        Section position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        sectionsList.put(SectionType.OBJECTIVE, position);
+
+        Section personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        sectionsList.put(SectionType.PERSONAL, personal);
+
+
+        List<String> listAchievements = new ArrayList<>();
+        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\"," +
+                "\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
+                "Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". " +
+                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
+        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
+                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
+
+        Section achievement = new BulletedListSection(listAchievements);
+        sectionsList.put(SectionType.ACHIEVEMENT, achievement);
+
+        List<String> listQualifications = new ArrayList<>();
+        listQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        listQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        listQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
+        listQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
+        listQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
+        listQualifications.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,");
+        listQualifications.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), " +
+                "JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
+
+        Section qualification = new BulletedListSection(listQualifications);
+        sectionsList.put(SectionType.QUALIFICATION, qualification);
+
+        List<Experience> listExperiences = new ArrayList<>();
+
+        List<DateIntervalExperience> intervalExperiences1 = new ArrayList<>();
+        intervalExperiences1.add(new DateIntervalExperience(YearMonth.of(2013, 10),
+                YearMonth.now(),
+                "Автор проекта.",
+                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+
+        Experience sectionExp1 = new Experience("Java Online Projects",
+                "",
+                intervalExperiences1);
+        listExperiences.add(sectionExp1);
+
+        List<DateIntervalExperience> intervalExperiences2 = new ArrayList<>();
+        intervalExperiences2.add(new DateIntervalExperience(YearMonth.of(2014, 10),
+                YearMonth.of(2016, 1),
+                "Старший разработчик (backend)",
+                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+                        "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        Experience sectionExp2 = new Experience("Wrike",
+                "",
+                intervalExperiences2);
+        listExperiences.add(sectionExp2);
+
+        Section experience = new OrganizationSection(listExperiences);
+        sectionsList.put(SectionType.EXPERIENCE, experience);
+
+        List<Experience> educations = new ArrayList<>();
+
+        List<DateIntervalExperience> intervalEducation1 = new ArrayList<>();
+        intervalEducation1.add(new DateIntervalExperience(
+                YearMonth.of(1997, 9),
+                YearMonth.of(1998, 3),
+                "6 месяцев обучения цифровым телефонным сетям (Москва)",
+                ""));
+
+        Experience sectionEducation1 = new Experience("Alcatel",
+                "",
+                intervalEducation1);
+        educations.add(sectionEducation1);
+
+        List<DateIntervalExperience> intervalEducation2 = new ArrayList<>();
+        intervalEducation2.add(new DateIntervalExperience(
+                YearMonth.of(1993, 9),
+                YearMonth.of(1996, 7),
+                "Аспирантура (программист С, С++)",
+                ""));
+        intervalEducation2.add(new DateIntervalExperience(
+                YearMonth.of(1987, 9),
+                YearMonth.of(1993, 7),
+                "Инженер (программист Fortran, C)",
+                ""));
+
+        Experience sectionEducation2 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                "",
+                intervalEducation2);
+        educations.add(sectionEducation2);
+
+        List<DateIntervalExperience> intervalEducation3 = new ArrayList<>();
+        intervalEducation3.add(new DateIntervalExperience(
+                YearMonth.of(1984, 9),
+                YearMonth.of(1987, 6),
+                "Закончил с отличием",
+                ""));
+
+        Experience sectionEducation3 = new Experience("Заочная физико-техническая школа при МФТИ",
+                "",
+                intervalEducation3);
+        educations.add(sectionEducation3);
+
+        Section education = new OrganizationSection(educations);
+        sectionsList.put(SectionType.EDUCATION, education);
+
+        resume.setSections(sectionsList);
+
+        return resume;
+    }
+
     public static void main(String[] args) {
         Resume resume = new Resume("Григорий Кислин");
         resume.addContact(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
@@ -19,7 +144,7 @@ public class ResumeTestData {
         resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
 
-        Map<SectionType, Section> sectionsList = new HashMap<>();
+        Map<SectionType, Section> sectionsList = new EnumMap<>(SectionType.class);
 
         Section position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sectionsList.put(SectionType.OBJECTIVE, position);
@@ -289,7 +414,7 @@ public class ResumeTestData {
                 List<Experience> bulletedList = ((OrganizationSection) resume.getSection(sectionType)).getContent();
                 for (Experience exp : bulletedList) {
                     System.out.println(exp.getOrganization());
-                    for (DateIntervalExperience dates: exp.getDates()) {
+                    for (DateIntervalExperience dates : exp.getDates()) {
                         System.out.println(dates.getDateStart().format(DateTimeFormatter.ofPattern("MM/yyyy")) + " - " + dates.getDateEnd().format(DateTimeFormatter.ofPattern("MM/yyyy")));
                         System.out.println(dates.getMainInfo());
                         System.out.println(dates.getNote());
