@@ -25,7 +25,7 @@ public class MainFile {
             throw new RuntimeException("Error", e);
         }
 
-        recursiveSearchFiles(new File("D:\\JavaProjects\\basejava\\src"));
+        recursiveSearchFiles(new File(".\\src"));
     }
 
     static void recursiveSearchFiles(File rootDir) {

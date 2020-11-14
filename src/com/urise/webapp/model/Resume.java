@@ -35,6 +35,10 @@ public class Resume {
         return fullName;
     }
 
+    public String getContact(ContactType contactType) {
+        return contacts.get(contactType);
+    }
+
     public void addContact(ContactType contactType, String contact) {
         contacts.put(contactType, contact);
     }
@@ -43,16 +47,16 @@ public class Resume {
         this.contacts.putAll(contacts);
     }
 
-    public String getContact(ContactType contactType) {
-        return contacts.get(contactType);
+    public AbstractSection getSection(SectionType sectionType) {
+        return sections.get(sectionType);
+    }
+
+    public void addSection(SectionType type, AbstractSection section) {
+        this.sections.put(type, section);
     }
 
     public void setSections(Map<SectionType, AbstractSection> sections) {
         this.sections.putAll(sections);
-    }
-
-    public AbstractSection getSection(SectionType sectionType) {
-        return sections.get(sectionType);
     }
 
     @Override
