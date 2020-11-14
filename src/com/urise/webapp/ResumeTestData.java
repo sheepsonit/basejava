@@ -24,12 +24,12 @@ public class ResumeTestData {
         System.out.println(phoneNumber);
         resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
         resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
-        Map<SectionType, Section> sectionsList = new EnumMap<>(SectionType.class);
+        Map<SectionType, AbstractSection> sectionsList = new EnumMap<>(SectionType.class);
 
-        Section position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sectionsList.put(SectionType.OBJECTIVE, position);
 
-        Section personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        AbstractSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
         sectionsList.put(SectionType.PERSONAL, personal);
 
 
@@ -41,7 +41,7 @@ public class ResumeTestData {
         listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
                 "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
 
-        Section achievement = new BulletedListSection(listAchievements);
+        AbstractSection achievement = new BulletedListSection(listAchievements);
         sectionsList.put(SectionType.ACHIEVEMENT, achievement);
 
         List<String> listQualifications = new ArrayList<>();
@@ -54,7 +54,7 @@ public class ResumeTestData {
         listQualifications.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), " +
                 "JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
 
-        Section qualification = new BulletedListSection(listQualifications);
+        AbstractSection qualification = new BulletedListSection(listQualifications);
         sectionsList.put(SectionType.QUALIFICATION, qualification);
 
         List<Experience> listExperiences = new ArrayList<>();
@@ -81,7 +81,7 @@ public class ResumeTestData {
                 intervalExperiences2);
         listExperiences.add(sectionExp2);
 
-        Section experience = new OrganizationSection(listExperiences);
+        AbstractSection experience = new OrganizationSection(listExperiences);
         sectionsList.put(SectionType.EXPERIENCE, experience);
 
         List<Experience> educations = new ArrayList<>();
@@ -127,7 +127,7 @@ public class ResumeTestData {
                 intervalEducation3);
         educations.add(sectionEducation3);
 
-        Section education = new OrganizationSection(educations);
+        AbstractSection education = new OrganizationSection(educations);
         sectionsList.put(SectionType.EDUCATION, education);
 
         resume.setSections(sectionsList);
@@ -144,12 +144,12 @@ public class ResumeTestData {
         resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
 
-        Map<SectionType, Section> sectionsList = new EnumMap<>(SectionType.class);
+        Map<SectionType, AbstractSection> sectionsList = new EnumMap<>(SectionType.class);
 
-        Section position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sectionsList.put(SectionType.OBJECTIVE, position);
 
-        Section personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        AbstractSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
         sectionsList.put(SectionType.PERSONAL, personal);
 
 
@@ -171,7 +171,7 @@ public class ResumeTestData {
         listAchievements.add("Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), " +
                 "Белоруcсии(Erip, Osmp) и Никарагуа.");
 
-        Section achievement = new BulletedListSection(listAchievements);
+        AbstractSection achievement = new BulletedListSection(listAchievements);
         sectionsList.put(SectionType.ACHIEVEMENT, achievement);
 
         List<String> listQualifications = new ArrayList<>();
@@ -193,7 +193,7 @@ public class ResumeTestData {
         listQualifications.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         listQualifications.add("Родной русский, английский \"upper intermediate\"");
 
-        Section qualification = new BulletedListSection(listQualifications);
+        AbstractSection qualification = new BulletedListSection(listQualifications);
         sectionsList.put(SectionType.QUALIFICATION, qualification);
 
         List<Experience> listExperiences = new ArrayList<>();
@@ -299,7 +299,7 @@ public class ResumeTestData {
                 intervalExperiences8);
         listExperiences.add(sectionExp8);
 
-        Section experience = new OrganizationSection(listExperiences);
+        AbstractSection experience = new OrganizationSection(listExperiences);
         sectionsList.put(SectionType.EXPERIENCE, experience);
 
         List<Experience> educations = new ArrayList<>();
@@ -381,7 +381,7 @@ public class ResumeTestData {
                 intervalEducation6);
         educations.add(sectionEducation6);
 
-        Section education = new OrganizationSection(educations);
+        AbstractSection education = new OrganizationSection(educations);
         sectionsList.put(SectionType.EDUCATION, education);
 
         resume.setSections(sectionsList);

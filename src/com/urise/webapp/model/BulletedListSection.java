@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class BulletedListSection extends Section {
+public class BulletedListSection extends AbstractSection {
 
     private List<String> list = new ArrayList<>();
 

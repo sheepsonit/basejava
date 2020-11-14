@@ -49,7 +49,7 @@ public class DateIntervalExperience {
         if (!dateStart.equals(that.dateStart)) return false;
         if (!dateEnd.equals(that.dateEnd)) return false;
         if (!mainInfo.equals(that.mainInfo)) return false;
-        return note != null ? note.equals(that.note) : that.note == null;
+        return Objects.equals(note, that.note);
     }
 
     @Override
