@@ -14,9 +14,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     private final File directory;
 
-    abstract void writeToFile(File searchKey, Resume resume);
+    abstract void writeToFile(File searchKey, Resume resume) throws IOException;
 
-    abstract Resume readFromFile(File searchKey);
+    abstract Resume readFromFile(File searchKey) throws IOException;
 
     public AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -36,17 +36,21 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     void updateResume(File searchKey, Resume resume) {
-        writeToFile(searchKey, resume);
+        try {
+            writeToFile(searchKey, resume);
+        } catch (IOException e) {
+            throw new StorageException("Write file error " + searchKey.getAbsolutePath(), searchKey.getName(), e);
+        }
     }
 
     @Override
     void saveResume(File searchKey, Resume resume) {
         try {
             searchKey.createNewFile();
-            writeToFile(searchKey, resume);
         } catch (IOException e) {
-            throw new StorageException("IO error ", searchKey.getName(), e);
+            throw new StorageException("Couldn`t create file " + searchKey.getAbsolutePath(), searchKey.getName(), e);
         }
+        updateResume(searchKey, resume);
     }
 
     @Override
@@ -60,7 +64,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     Resume getResume(File searchKey, String uuid) {
-        return readFromFile(searchKey);
+        try {
+            return readFromFile(searchKey);
+        }
+        catch (IOException e) {
+            throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), uuid);
+        }
     }
 
     @Override
@@ -69,8 +78,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         File[] fileResumes = directory.listFiles();
         if (fileResumes != null) {
             for (File file : fileResumes) {
-                resumes.add(readFromFile(file));
+                try {
+                    resumes.add(readFromFile(file));
+                }
+                catch (IOException e) {
+                    throw new StorageException("Couldn`t read file " + file.getAbsolutePath(), null);
+                }
             }
+        }
+        else {
+            throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
         }
         return resumes;
     }
@@ -93,6 +110,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         String[] fileNames = directory.list();
-        return fileNames != null ? fileNames.length : 0;
+        if (fileNames == null) {
+            throw new StorageException("Directory read error ", null);
+        }
+        return fileNames.length;
     }
 }
