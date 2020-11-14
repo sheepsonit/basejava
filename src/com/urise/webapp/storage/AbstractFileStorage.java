@@ -50,7 +50,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    void deleteResume(File searchKey, String uuid) {
+    void deleteResume(File searchKey) {
         try {
             Files.delete(searchKey.toPath());
         } catch (IOException e) {
@@ -85,11 +85,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         File[] resumes = directory.listFiles();
         if (resumes != null) {
             for (File file : resumes) {
-                try {
-                    Files.delete(file.toPath());
-                } catch (IOException e) {
-                    throw new StorageException("IO error ", file.getName(), e);
-                }
+                deleteResume(file);
             }
         }
     }

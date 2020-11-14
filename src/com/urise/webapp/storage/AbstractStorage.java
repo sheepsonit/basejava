@@ -18,7 +18,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     abstract void saveResume(SK searchKey, Resume resume);
 
-    abstract void deleteResume(SK searchKey, String uuid);
+    abstract void deleteResume(SK searchKey);
 
     abstract Resume getResume(SK searchKey, String uuid);
 
@@ -41,7 +41,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public void delete(String uuid) {
         LOG.info("delete resume: " + uuid);
-        deleteResume(getExistedKey(uuid), uuid);
+        deleteResume(getExistedKey(uuid));
     }
 
     @Override
