@@ -25,17 +25,16 @@ public class MainFile {
             throw new RuntimeException("Error", e);
         }
 
-        recursiveSearchFiles(new File(".\\src"));
+        recursiveSearchFiles(new File(".\\src"), 0);
     }
 
-    static void recursiveSearchFiles(File rootDir) {
-        if (rootDir.isFile()) {
-            System.out.println(rootDir.getName());
-        } else {
+    static void recursiveSearchFiles(File rootDir, int lvl) {
+        System.out.println("\t".repeat(Math.max(0, lvl)) + rootDir.getName());
+        if (rootDir.isDirectory()) {
             File[] children = rootDir.listFiles();
             if (children != null) {
                 for (File file : children) {
-                    recursiveSearchFiles(file);
+                    recursiveSearchFiles(file, lvl + 1);
                 }
             }
         }
