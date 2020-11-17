@@ -7,6 +7,7 @@ import com.urise.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractStorageTest {
     Storage storage;
+    static final File STORAGE_DIR = new File("src/storage");
     static final String UUID_1 = "uuid1";
     static final String UUID_2 = "uuid2";
     static final String UUID_3 = "uuid3";

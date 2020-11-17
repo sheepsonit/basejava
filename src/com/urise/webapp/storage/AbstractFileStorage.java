@@ -13,9 +13,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     private final File directory;
 
-    abstract void writeToFile(OutputStream searchKey, Resume resume) throws IOException;
 
-    abstract Resume readFromFile(InputStream searchKey) throws IOException;
+
+    abstract void writeToFile(OutputStream os, Resume resume) throws IOException;
+
+    abstract Resume readFromFile(InputStream is) throws IOException;
 
     public AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");

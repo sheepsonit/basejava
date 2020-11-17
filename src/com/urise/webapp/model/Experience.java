@@ -1,12 +1,13 @@
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Experience {
+public class Experience implements Serializable {
 
     private Link organization;
 
@@ -50,7 +51,9 @@ public class Experience {
                 ')';
     }
 
-    public static class DateIntervalExperience {
+    public static class DateIntervalExperience implements Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         private YearMonth dateStart;
 

@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class OrganizationSection extends AbstractSection {
 
+    private static final long serialVersionUID = 1L;
+
     private List<Experience> list = new ArrayList<>();
 
     public OrganizationSection(Experience... experiences) {
