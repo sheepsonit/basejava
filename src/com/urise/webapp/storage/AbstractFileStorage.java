@@ -3,8 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +13,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     private final File directory;
 
-    abstract void writeToFile(File searchKey, Resume resume) throws IOException;
+    abstract void writeToFile(OutputStream searchKey, Resume resume) throws IOException;
 
-    abstract Resume readFromFile(File searchKey) throws IOException;
+    abstract Resume readFromFile(InputStream searchKey) throws IOException;
 
     public AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -37,7 +36,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     void updateResume(File searchKey, Resume resume) {
         try {
-            writeToFile(searchKey, resume);
+            writeToFile(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.getAbsolutePath(), searchKey.getName(), e);
         }
@@ -65,7 +64,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     Resume getResume(File searchKey, String uuid) {
         try {
-            return readFromFile(searchKey);
+            return readFromFile(new BufferedInputStream(new FileInputStream(searchKey)));
         }
         catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), uuid);
@@ -79,7 +78,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         if (fileResumes != null) {
             for (File file : fileResumes) {
                 try {
-                    resumes.add(readFromFile(file));
+                    resumes.add(readFromFile(new BufferedInputStream(new FileInputStream(file))));
                 }
                 catch (IOException e) {
                     throw new StorageException("Couldn`t read file " + file.getAbsolutePath(), null);
