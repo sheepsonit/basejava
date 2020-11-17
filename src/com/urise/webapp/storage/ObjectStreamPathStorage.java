@@ -5,17 +5,10 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage implements SerializedStrategy {
+public class ObjectStreamPathStorage extends AbstractPathStorage implements SerializedStrategy {
 
-    ObjectStreamStorage(File directory) {
+    public ObjectStreamPathStorage(String directory) {
         super(directory);
-    }
-
-    @Override
-    public void writeToFile(OutputStream os, Resume resume) throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
-            oos.writeObject(resume);
-        }
     }
 
     @Override
@@ -24,6 +17,13 @@ public class ObjectStreamStorage extends AbstractFileStorage implements Serializ
             return (Resume) ois.readObject();
         } catch (ClassNotFoundException e) {
             throw new StorageException("Error read resume", null, e);
+        }
+    }
+
+    @Override
+    void writeToFile(OutputStream os, Resume resume) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
+            oos.writeObject(resume);
         }
     }
 
