@@ -9,15 +9,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
 
     private final File directory;
 
-    abstract Resume readFromFile(InputStream is) throws IOException;
+    private SerializedStrategy serializedStrategy;
 
-    abstract void writeToFile(OutputStream os, Resume resume) throws IOException;
+    void setStrategy(SerializedStrategy strategy) {
+        this.serializedStrategy = strategy;
+    }
 
-    public AbstractFileStorage(File directory) {
+    void executeWriteStrategy(OutputStream os, Resume resume) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
+            this.serializedStrategy.write(os, resume);
+        } catch (IOException e) {
+            throw new StorageException("Error write resume", resume.getUuid(), e);
+        }
+    }
+
+    Resume executeReadStrategy(InputStream is) {
+        try (ObjectInputStream ois = new ObjectInputStream(is)) {
+            return this.serializedStrategy.read(is);
+        } catch (IOException e) {
+            throw new StorageException("Error read resume", null, e);
+        }
+    }
+
+    public FileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -36,7 +54,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     void updateResume(File searchKey, Resume resume) {
         try {
-            writeToFile(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
+            executeWriteStrategy(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.getAbsolutePath(), resume.getUuid(), e);
         }
@@ -64,7 +82,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     Resume getResume(File searchKey, String uuid) {
         try {
-            return readFromFile(new BufferedInputStream(new FileInputStream(searchKey)));
+            return executeReadStrategy(new BufferedInputStream(new FileInputStream(searchKey)));
         } catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), uuid);
         }
@@ -77,7 +95,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         if (fileResumes != null) {
             for (File file : fileResumes) {
                 try {
-                    resumes.add(readFromFile(new BufferedInputStream(new FileInputStream(file))));
+                    resumes.add(executeReadStrategy(new BufferedInputStream(new FileInputStream(file))));
                 } catch (IOException e) {
                     throw new StorageException("Couldn`t read file " + file.getAbsolutePath(), null);
                 }

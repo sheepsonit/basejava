@@ -5,30 +5,25 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage implements SerializedStrategy {
+public class ObjectStreamStorage extends FileStorage implements SerializedStrategy {
 
     ObjectStreamStorage(File directory) {
         super(directory);
     }
 
     @Override
-    public void writeToFile(OutputStream os, Resume resume) throws IOException {
+    public void write(OutputStream os, Resume resume) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(resume);
         }
     }
 
     @Override
-    Resume readFromFile(InputStream is) throws IOException {
+    public Resume read(InputStream is) throws IOException {
         try (ObjectInputStream ois = new ObjectInputStream(is)) {
             return (Resume) ois.readObject();
         } catch (ClassNotFoundException e) {
             throw new StorageException("Error read resume", null, e);
         }
-    }
-
-    @Override
-    public void write(OutputStream os, Resume resume) throws IOException {
-        writeToFile(os, resume);
     }
 }

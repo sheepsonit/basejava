@@ -2,12 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,8 +11,6 @@ import java.util.logging.Logger;
 public abstract class AbstractStorage<SK> implements Storage {
 
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
-
-    private SerializedStrategy serializedStrategy;
 
     abstract SK getSearchKey(String uuid);
 
@@ -31,19 +25,6 @@ public abstract class AbstractStorage<SK> implements Storage {
     abstract List<Resume> getResumes();
 
     abstract boolean isExist(SK searchKey);
-
-
-    void setSerializedStrategy(SerializedStrategy strategy) {
-        this.serializedStrategy = strategy;
-    }
-
-    void executeSerializedStrategy(OutputStream os, Resume resume) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
-            this.serializedStrategy.write(os, resume);
-        } catch (IOException e) {
-            throw new StorageException("Error write resume", resume.getUuid(), e);
-        }
-    }
 
     @Override
     public void update(Resume resume) {
