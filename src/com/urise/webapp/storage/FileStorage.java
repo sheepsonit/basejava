@@ -19,20 +19,12 @@ public class FileStorage extends AbstractStorage<File> {
         this.serializedStrategy = strategy;
     }
 
-    void executeWriteStrategy(OutputStream os, Resume resume) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
+    void executeWriteStrategy(OutputStream os, Resume resume) throws IOException {
             this.serializedStrategy.write(os, resume);
-        } catch (IOException e) {
-            throw new StorageException("Error write resume", resume.getUuid(), e);
-        }
     }
 
-    Resume executeReadStrategy(InputStream is) {
-        try (ObjectInputStream ois = new ObjectInputStream(is)) {
+    Resume executeReadStrategy(InputStream is) throws IOException {
             return this.serializedStrategy.read(is);
-        } catch (IOException e) {
-            throw new StorageException("Error read resume", null, e);
-        }
     }
 
     public FileStorage(File directory) {
