@@ -28,6 +28,12 @@ public abstract class AbstractStorageTest {
 
     AbstractStorageTest(Storage storage) {
         this.storage = storage;
+        if (storage instanceof FileStorage) {
+            ((FileStorage) storage).setStrategy(new ObjectStreamStorage(STORAGE_DIR));
+        }
+        if (storage instanceof PathStorage) {
+            ((PathStorage) storage).setStrategy(new ObjectStreamPathStorage(STORAGE_DIR.getAbsolutePath()));
+        }
     }
 
     @Before

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class PathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
     private SerializedStrategy serializedStrategy;
@@ -21,11 +21,11 @@ public abstract class PathStorage extends AbstractStorage<Path> {
     }
 
     void executeWriteStrategy(OutputStream os, Resume resume) throws IOException {
-            this.serializedStrategy.write(os, resume);
+        this.serializedStrategy.write(os, resume);
     }
 
     Resume executeReadStrategy(InputStream is) throws IOException {
-            return this.serializedStrategy.read(is);
+        return this.serializedStrategy.read(is);
     }
 
     public PathStorage(String directory) {
