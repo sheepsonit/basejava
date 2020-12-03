@@ -1,8 +1,6 @@
 package com.urise.webapp.storage;
 
-public class ObjectStreamStorageTest extends FileStorageTest {
-
+public class ObjectStreamStorageTest {
     public ObjectStreamStorageTest() {
-        super();
     }
 }

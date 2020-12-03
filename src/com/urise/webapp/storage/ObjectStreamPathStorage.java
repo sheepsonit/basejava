@@ -5,10 +5,9 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamPathStorage extends PathStorage implements SerializedStrategy {
+public class ObjectStreamPathStorage implements SerializedStrategy {
 
-    public ObjectStreamPathStorage(String directory) {
-        super(directory);
+    public ObjectStreamPathStorage() {
     }
 
     @Override

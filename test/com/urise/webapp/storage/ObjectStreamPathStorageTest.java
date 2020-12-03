@@ -1,7 +1,6 @@
 package com.urise.webapp.storage;
 
-public class ObjectStreamPathStorageTest extends PathStorageTest {
+public class ObjectStreamPathStorageTest {
     public ObjectStreamPathStorageTest() {
-        super();
     }
 }

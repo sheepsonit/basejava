@@ -15,20 +15,9 @@ public class FileStorage extends AbstractStorage<File> {
 
     private SerializedStrategy serializedStrategy;
 
-    void setStrategy(SerializedStrategy strategy) {
-        this.serializedStrategy = strategy;
-    }
-
-    void executeWriteStrategy(OutputStream os, Resume resume) throws IOException {
-            this.serializedStrategy.write(os, resume);
-    }
-
-    Resume executeReadStrategy(InputStream is) throws IOException {
-            return this.serializedStrategy.read(is);
-    }
-
-    public FileStorage(File directory) {
+    public FileStorage(File directory, SerializedStrategy strategy) {
         Objects.requireNonNull(directory, "directory must not be null");
+        Objects.requireNonNull(strategy, "strategy must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -36,6 +25,15 @@ public class FileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+        this.serializedStrategy = strategy;
+    }
+
+    void executeWriteStrategy(OutputStream os, Resume resume) throws IOException {
+        this.serializedStrategy.write(os, resume);
+    }
+
+    Resume executeReadStrategy(InputStream is) throws IOException {
+        return this.serializedStrategy.read(is);
     }
 
     @Override

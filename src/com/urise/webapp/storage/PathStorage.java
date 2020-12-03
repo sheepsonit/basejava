@@ -16,7 +16,16 @@ public class PathStorage extends AbstractStorage<Path> {
 
     private SerializedStrategy serializedStrategy;
 
-    void setStrategy(SerializedStrategy strategy) {
+    public PathStorage(String directory, SerializedStrategy strategy) {
+        Objects.requireNonNull(directory, "directory must not be null");
+        Objects.requireNonNull(strategy, "strategy must not be null");
+        this.directory = Paths.get(directory);
+        if (!Files.isDirectory(this.directory)) {
+            throw new IllegalArgumentException(directory + " is not directory");
+        }
+        if (!Files.isReadable(this.directory) || !Files.isWritable(this.directory)) {
+            throw new IllegalArgumentException(directory + " is not readable/writable");
+        }
         this.serializedStrategy = strategy;
     }
 
@@ -26,17 +35,6 @@ public class PathStorage extends AbstractStorage<Path> {
 
     Resume executeReadStrategy(InputStream is) throws IOException {
         return this.serializedStrategy.read(is);
-    }
-
-    public PathStorage(String directory) {
-        Objects.requireNonNull(directory, "directory must not be null");
-        this.directory = Paths.get(directory);
-        if (!Files.isDirectory(this.directory)) {
-            throw new IllegalArgumentException(directory + " is not directory");
-        }
-        if (!Files.isReadable(this.directory) || !Files.isWritable(this.directory)) {
-            throw new IllegalArgumentException(directory + " is not readable/writable");
-        }
     }
 
     @Override
