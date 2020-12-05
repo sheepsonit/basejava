@@ -4,7 +4,6 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,14 +27,6 @@ public class FileStorage extends AbstractStorage<File> {
         this.serializedStrategy = strategy;
     }
 
-    void executeWriteStrategy(OutputStream os, Resume resume) throws IOException {
-        this.serializedStrategy.write(os, resume);
-    }
-
-    Resume executeReadStrategy(InputStream is) throws IOException {
-        return this.serializedStrategy.read(is);
-    }
-
     @Override
     File getSearchKey(String uuid) {
         return new File(directory, uuid);
@@ -44,7 +35,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     void updateResume(File searchKey, Resume resume) {
         try {
-            executeWriteStrategy(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
+            this.serializedStrategy.write(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.getAbsolutePath(), resume.getUuid(), e);
         }
@@ -62,17 +53,15 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     void deleteResume(File searchKey) {
-        try {
-            Files.delete(searchKey.toPath());
-        } catch (IOException e) {
-            throw new StorageException("IO error ", null, e);
+        if (!searchKey.delete()) {
+            throw new StorageException("IO error ", null);
         }
     }
 
     @Override
     Resume getResume(File searchKey, String uuid) {
         try {
-            return executeReadStrategy(new BufferedInputStream(new FileInputStream(searchKey)));
+            return this.serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey)));
         } catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), uuid);
         }
@@ -82,16 +71,12 @@ public class FileStorage extends AbstractStorage<File> {
     List<Resume> getResumes() {
         List<Resume> resumes = new ArrayList<>();
         File[] fileResumes = directory.listFiles();
-        if (fileResumes != null) {
-            for (File file : fileResumes) {
-                try {
-                    resumes.add(executeReadStrategy(new BufferedInputStream(new FileInputStream(file))));
-                } catch (IOException e) {
-                    throw new StorageException("Couldn`t read file " + file.getAbsolutePath(), null);
-                }
-            }
-        } else {
+        if (fileResumes == null) {
             throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
+        } else {
+            for (File file : fileResumes) {
+                resumes.add(getResume(file, null));
+            }
         }
         return resumes;
     }

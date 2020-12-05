@@ -7,9 +7,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
@@ -29,23 +29,15 @@ public class PathStorage extends AbstractStorage<Path> {
         this.serializedStrategy = strategy;
     }
 
-    void executeWriteStrategy(OutputStream os, Resume resume) throws IOException {
-        this.serializedStrategy.write(os, resume);
-    }
-
-    Resume executeReadStrategy(InputStream is) throws IOException {
-        return this.serializedStrategy.read(is);
-    }
-
     @Override
     Path getSearchKey(String uuid) {
-        return Paths.get(directory.toAbsolutePath().toString(), uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
     void updateResume(Path searchKey, Resume resume) {
         try {
-            executeWriteStrategy(new BufferedOutputStream(new FileOutputStream(searchKey.toString())), resume);
+            this.serializedStrategy.write(new BufferedOutputStream(new FileOutputStream(searchKey.toString())), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.toAbsolutePath(), resume.getUuid(), e);
         }
@@ -73,7 +65,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     Resume getResume(Path searchKey, String uuid) {
         try {
-            return executeReadStrategy(new BufferedInputStream(new FileInputStream(searchKey.toString())));
+            return this.serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey.toString())));
         } catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath(), uuid);
         }
@@ -81,15 +73,9 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     List<Resume> getResumes() {
-        List<Resume> resumes = new ArrayList<>();
+        List<Resume> resumes;
         try {
-            Files.list(directory).forEach(file -> {
-                try {
-                    resumes.add(executeReadStrategy(new BufferedInputStream(new FileInputStream(file.toString()))));
-                } catch (IOException e) {
-                    throw new StorageException("Couldn`t read file " + file.toAbsolutePath(), null);
-                }
-            });
+            resumes = Files.list(directory).map(file -> getResume(file, null)).collect(Collectors.toList());
         } catch (IOException e) {
             throw new StorageException("Directory read error " + directory.toAbsolutePath(), null);
         }
