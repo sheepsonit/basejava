@@ -37,7 +37,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     void updateResume(Path searchKey, Resume resume) {
         try {
-            this.serializedStrategy.write(new BufferedOutputStream(new FileOutputStream(searchKey.toString())), resume);
+            this.serializedStrategy.write(new BufferedOutputStream(Files.newOutputStream(searchKey)), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.toAbsolutePath(), resume.getUuid(), e);
         }
@@ -65,7 +65,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     Resume getResume(Path searchKey) {
         try {
-            return this.serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey.toString())));
+            return this.serializedStrategy.read(new BufferedInputStream(Files.newInputStream(searchKey)));
         } catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath(), null);
         }
