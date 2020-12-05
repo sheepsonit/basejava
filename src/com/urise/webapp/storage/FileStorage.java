@@ -59,11 +59,11 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    Resume getResume(File searchKey, String uuid) {
+    Resume getResume(File searchKey) {
         try {
             return this.serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey)));
         } catch (IOException e) {
-            throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), uuid);
+            throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), null);
         }
     }
 
@@ -75,7 +75,7 @@ public class FileStorage extends AbstractStorage<File> {
             throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
         } else {
             for (File file : fileResumes) {
-                resumes.add(getResume(file, null));
+                resumes.add(getResume(file));
             }
         }
         return resumes;

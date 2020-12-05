@@ -29,7 +29,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    Resume getResume(Resume searchKey, String uuid) {
+    Resume getResume(Resume searchKey) {
         return searchKey;
     }
 

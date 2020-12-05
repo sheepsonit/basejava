@@ -63,11 +63,11 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    Resume getResume(Path searchKey, String uuid) {
+    Resume getResume(Path searchKey) {
         try {
             return this.serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey.toString())));
         } catch (IOException e) {
-            throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath(), uuid);
+            throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath(), null);
         }
     }
 
@@ -75,7 +75,7 @@ public class PathStorage extends AbstractStorage<Path> {
     List<Resume> getResumes() {
         List<Resume> resumes;
         try {
-            resumes = Files.list(directory).map(file -> getResume(file, null)).collect(Collectors.toList());
+            resumes = Files.list(directory).map(this::getResume).collect(Collectors.toList());
         } catch (IOException e) {
             throw new StorageException("Directory read error " + directory.toAbsolutePath(), null);
         }
