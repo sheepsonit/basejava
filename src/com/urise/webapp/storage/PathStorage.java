@@ -3,13 +3,16 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
@@ -26,7 +29,15 @@ public class PathStorage extends AbstractStorage<Path> {
         if (!Files.isReadable(this.directory) || !Files.isWritable(this.directory)) {
             throw new IllegalArgumentException(directory + " is not readable/writable");
         }
-        this.serializedStrategy = strategy;
+        serializedStrategy = strategy;
+    }
+
+    private Stream<Path> getListFiles() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory read error " + directory, null);
+        }
     }
 
     @Override
@@ -37,7 +48,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     void updateResume(Path searchKey, Resume resume) {
         try {
-            this.serializedStrategy.write(new BufferedOutputStream(Files.newOutputStream(searchKey)), resume);
+            serializedStrategy.write(new BufferedOutputStream(Files.newOutputStream(searchKey)), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.toAbsolutePath(), resume.getUuid(), e);
         }
@@ -65,7 +76,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     Resume getResume(Path searchKey) {
         try {
-            return this.serializedStrategy.read(new BufferedInputStream(Files.newInputStream(searchKey)));
+            return serializedStrategy.read(new BufferedInputStream(Files.newInputStream(searchKey)));
         } catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath(), null);
         }
@@ -73,14 +84,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     List<Resume> getResumes() {
-        List<Resume> resumes;
-        try {
-            resumes = Files.list(directory).map(this::getResume).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new StorageException("Directory read error " + directory.toAbsolutePath(), null);
-        }
-
-        return resumes;
+        return getListFiles().map(this::getResume).collect(Collectors.toList());
     }
 
     @Override
@@ -90,19 +94,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::deleteResume);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        getListFiles().forEach(this::deleteResume);
+
     }
 
     @Override
     public int size() {
-        try {
-            return (int) Files.list(directory).count();
-        } catch (IOException e) {
-            throw new StorageException("Directory read error ", null);
-        }
+        return (int) getListFiles().count();
     }
 }

@@ -24,7 +24,14 @@ public class FileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        this.serializedStrategy = strategy;
+        serializedStrategy = strategy;
+    }
+
+    private File[] getListFiles() {
+        File[] fileResumes = directory.listFiles();
+        if (fileResumes == null)
+            throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
+        return fileResumes;
     }
 
     @Override
@@ -35,7 +42,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     void updateResume(File searchKey, Resume resume) {
         try {
-            this.serializedStrategy.write(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
+            serializedStrategy.write(new BufferedOutputStream(new FileOutputStream(searchKey)), resume);
         } catch (IOException e) {
             throw new StorageException("Write file error " + searchKey.getAbsolutePath(), resume.getUuid(), e);
         }
@@ -61,7 +68,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     Resume getResume(File searchKey) {
         try {
-            return this.serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey)));
+            return serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey)));
         } catch (IOException e) {
             throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), null);
         }
@@ -70,14 +77,10 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     List<Resume> getResumes() {
         List<Resume> resumes = new ArrayList<>();
-        File[] fileResumes = directory.listFiles();
-        if (fileResumes == null) {
-            throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
-        } else {
-            for (File file : fileResumes) {
-                resumes.add(getResume(file));
-            }
+        for (File file : getListFiles()) {
+            resumes.add(getResume(file));
         }
+
         return resumes;
     }
 
@@ -88,20 +91,13 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] resumes = directory.listFiles();
-        if (resumes != null) {
-            for (File file : resumes) {
-                deleteResume(file);
-            }
+        for (File file : getListFiles()) {
+            deleteResume(file);
         }
     }
 
     @Override
     public int size() {
-        String[] fileNames = directory.list();
-        if (fileNames == null) {
-            throw new StorageException("Directory read error ", null);
-        }
-        return fileNames.length;
+        return getListFiles().length;
     }
 }
