@@ -27,13 +27,6 @@ public class FileStorage extends AbstractStorage<File> {
         serializedStrategy = strategy;
     }
 
-    private File[] getListFiles() {
-        File[] fileResumes = directory.listFiles();
-        if (fileResumes == null)
-            throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
-        return fileResumes;
-    }
-
     @Override
     File getSearchKey(String uuid) {
         return new File(directory, uuid);
@@ -99,5 +92,13 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         return getListFiles().length;
+    }
+
+    private File[] getListFiles() {
+        File[] fileResumes = directory.listFiles();
+        if (fileResumes == null) {
+            throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
+        }
+        return fileResumes;
     }
 }

@@ -32,14 +32,6 @@ public class PathStorage extends AbstractStorage<Path> {
         serializedStrategy = strategy;
     }
 
-    private Stream<Path> getListFiles() {
-        try {
-            return Files.list(directory);
-        } catch (IOException e) {
-            throw new StorageException("Directory read error " + directory, null);
-        }
-    }
-
     @Override
     Path getSearchKey(String uuid) {
         return directory.resolve(uuid);
@@ -101,5 +93,13 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     public int size() {
         return (int) getListFiles().count();
+    }
+
+    private Stream<Path> getListFiles() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory read error " + directory, null);
+        }
     }
 }
