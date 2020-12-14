@@ -58,7 +58,8 @@ public class ResumeTestData {
 
         Experience sectionExp1 = new Experience("Java Online Projects",
                 "",
-                new Experience.DateIntervalExperience(YearMonth.of(2013, 10),
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(2013, 10),
                         YearMonth.now(),
                         "Автор проекта.",
                         "Создание, организация и проведение Java онлайн проектов и стажировок."));
@@ -66,7 +67,8 @@ public class ResumeTestData {
 
         Experience sectionExp2 = new Experience("Wrike",
                 "",
-                new Experience.DateIntervalExperience(YearMonth.of(2014, 10),
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(2014, 10),
                         YearMonth.of(2016, 1),
                         "Старший разработчик (backend)",
                         "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +

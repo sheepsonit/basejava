@@ -1,5 +1,10 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.util.YearMonthAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -7,11 +12,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Serializable {
 
     private Link organization;
 
     private List<DateIntervalExperience> dates = new ArrayList<>();
+
+    public Experience() {
+    }
 
     public Experience(String organizationName, String url, DateIntervalExperience... intervalsOfExperience) {
         this(new Link(organizationName, url), Arrays.asList(intervalsOfExperience));
@@ -51,17 +60,21 @@ public class Experience implements Serializable {
                 ')';
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class DateIntervalExperience implements Serializable {
 
         private static final long serialVersionUID = 1L;
-
+        @XmlJavaTypeAdapter(YearMonthAdapter.class)
         private YearMonth dateStart;
-
+        @XmlJavaTypeAdapter(YearMonthAdapter.class)
         private YearMonth dateEnd;
 
         private String mainInfo;
 
         private String note;
+
+        public DateIntervalExperience() {
+        }
 
         public DateIntervalExperience(YearMonth dateStart, YearMonth dateEnd, String mainInfo, String note) {
             Objects.requireNonNull(dateStart, "dateStart must not be null");

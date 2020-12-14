@@ -11,6 +11,9 @@ public class BulletedListSection extends AbstractSection {
 
     private List<String> list = new ArrayList<>();
 
+    public BulletedListSection() {
+    }
+
     public BulletedListSection(String... content) {
         this(Arrays.asList(content));
     }
