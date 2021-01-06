@@ -104,12 +104,12 @@ public class ResumeTestData {
         educations.add(sectionEducation2);
 
         Experience sectionEducation3 = new Experience("Заочная физико-техническая школа при МФТИ",
-                "",
+                null,
                 new Experience.DateIntervalExperience(
                         YearMonth.of(1984, 9),
                         YearMonth.of(1987, 6),
                         "Закончил с отличием",
-                        ""));
+                        null));
         educations.add(sectionEducation3);
 
         AbstractSection education = new OrganizationSection(educations);

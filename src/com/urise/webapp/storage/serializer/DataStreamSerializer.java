@@ -26,42 +26,48 @@ public class DataStreamSerializer implements SerializedStrategy {
                 dos.writeUTF(contact.getValue());
             }
             for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
-                dos.writeUTF(section.getKey().name());
+                SectionType sectionType = section.getKey();
+                dos.writeUTF(sectionType.name());
                 AbstractSection tmpSection = section.getValue();
-                if (tmpSection instanceof TextSection) {
-                    dos.writeUTF(((TextSection) tmpSection).getContent());
-                } else if (tmpSection instanceof BulletedListSection) {
-                    dos.writeInt(((BulletedListSection) tmpSection).getContent().size());
-                    ((BulletedListSection) tmpSection).getContent().forEach(content -> {
-                        try {
-                            dos.writeUTF(content);
-                        } catch (IOException e) {
-                            throw new StorageException("Error write resume bulleted list section", null, e);
-                        }
-                    });
-                } else if (tmpSection instanceof OrganizationSection) {
-                    dos.writeInt(((OrganizationSection) tmpSection).getContent().size());
-                    ((OrganizationSection) tmpSection).getContent().forEach(content -> {
-                        try {
-                            dos.writeUTF(content.getOrganization().getName());
-                            dos.writeUTF(content.getOrganization().getUrl());
-                            dos.writeInt(content.getDates().size());
-                            content.getDates().forEach(experience -> {
-                                try {
-                                    dos.writeInt(experience.getDateStart().getYear());
-                                    dos.writeInt(experience.getDateStart().getMonthValue());
-                                    dos.writeInt(experience.getDateEnd().getYear());
-                                    dos.writeInt(experience.getDateEnd().getMonthValue());
-                                    dos.writeUTF(experience.getMainInfo());
-                                    dos.writeUTF(experience.getNote());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        } catch (IOException e) {
-                            throw new StorageException("Error write resume organization section", null, e);
-                        }
-                    });
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection) tmpSection).getContent());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATION:
+                        dos.writeInt(((BulletedListSection) tmpSection).getContent().size());
+                        ((BulletedListSection) tmpSection).getContent().forEach(content -> {
+                            try {
+                                dos.writeUTF(content);
+                            } catch (IOException e) {
+                                throw new StorageException("Error write resume bulleted list section", null, e);
+                            }
+                        });
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        dos.writeInt(((OrganizationSection) tmpSection).getContent().size());
+                        ((OrganizationSection) tmpSection).getContent().forEach(content -> {
+                            try {
+                                dos.writeUTF(content.getOrganization().getName());
+                                dos.writeUTF(content.getOrganization().getUrl());
+                                dos.writeInt(content.getDates().size());
+                                content.getDates().forEach(experience -> {
+                                    try {
+                                        writeDate(experience.getDateStart(), dos);
+                                        writeDate(experience.getDateEnd(), dos);
+                                        dos.writeUTF(experience.getMainInfo());
+                                        dos.writeUTF(experience.getNote());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            } catch (IOException e) {
+                                throw new StorageException("Error write resume organization section", null, e);
+                            }
+                        });
+                        break;
                 }
             }
         }
@@ -80,39 +86,47 @@ public class DataStreamSerializer implements SerializedStrategy {
             while (dis.available() > 0) {
                 String type = dis.readUTF();
 
-                if (type.equals(SectionType.PERSONAL.name()) || type.equals(SectionType.OBJECTIVE.name())) {
-                    resume.addSection(SectionType.valueOf(type), new TextSection(dis.readUTF()));
-                }
-
-                if (type.equals(SectionType.ACHIEVEMENT.name()) || type.equals(SectionType.QUALIFICATION.name())) {
-                    int cnt = dis.readInt();
-                    List<String> bulletedList = new ArrayList<>(cnt);
-                    for (int i = 0; i < cnt; i++) {
-                        bulletedList.add(dis.readUTF());
-                    }
-                    resume.addSection(SectionType.valueOf(type), new BulletedListSection(bulletedList));
-                }
-
-                if (type.equals(SectionType.EXPERIENCE.name()) || type.equals(SectionType.EDUCATION.name())) {
-                    int cnt = dis.readInt();
-                    List<Experience> bulletedList = new ArrayList<>(cnt);
-                    for (int i = 0; i < cnt; i++) {
-                        String organizationName = dis.readUTF();
-                        String url = dis.readUTF();
-                        int cntDates = dis.readInt();
-                        List<Experience.DateIntervalExperience> dates = new ArrayList<>(cntDates);
-
-                        for (int j = 0; j < cntDates; j++) {
-                            dates.add(new Experience.DateIntervalExperience(YearMonth.of(dis.readInt(), dis.readInt()), YearMonth.of(dis.readInt(), dis.readInt()), dis.readUTF(), dis.readUTF()));
+                switch (SectionType.valueOf(type)) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.addSection(SectionType.valueOf(type), new TextSection(dis.readUTF()));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATION:
+                        int cnt = dis.readInt();
+                        List<String> bulletedList = new ArrayList<>(cnt);
+                        for (int i = 0; i < cnt; i++) {
+                            bulletedList.add(dis.readUTF());
                         }
-                        bulletedList.add(new Experience(new Link(organizationName, url), dates));
+                        resume.addSection(SectionType.valueOf(type), new BulletedListSection(bulletedList));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        cnt = dis.readInt();
+                        List<Experience> experienceList = new ArrayList<>(cnt);
+                        for (int i = 0; i < cnt; i++) {
+                            String organizationName = dis.readUTF();
+                            String url = dis.readUTF();
+                            int cntDates = dis.readInt();
+                            List<Experience.DateIntervalExperience> dates = new ArrayList<>(cntDates);
 
-                    }
-                    resume.addSection(SectionType.valueOf(type), new OrganizationSection(bulletedList));
+                            for (int j = 0; j < cntDates; j++) {
+                                dates.add(new Experience.DateIntervalExperience(YearMonth.of(dis.readInt(), dis.readInt()), YearMonth.of(dis.readInt(), dis.readInt()), dis.readUTF(), dis.readUTF()));
+                            }
+                            experienceList.add(new Experience(new Link(organizationName, url), dates));
+
+                        }
+                        resume.addSection(SectionType.valueOf(type), new OrganizationSection(experienceList));
+                        break;
                 }
             }
 
             return resume;
         }
+    }
+
+    private void writeDate(YearMonth date, DataOutputStream dos) throws IOException {
+        dos.writeInt(date.getYear());
+        dos.writeInt(date.getMonthValue());
     }
 }

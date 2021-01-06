@@ -83,7 +83,7 @@ public class Experience implements Serializable {
             this.dateStart = dateStart;
             this.dateEnd = dateEnd;
             this.mainInfo = mainInfo;
-            this.note = note;
+            this.note = Objects.isNull(note) ? "" : note;
         }
 
         public YearMonth getDateStart() {
