@@ -1,6 +1,5 @@
 package com.urise.webapp.storage.serializer;
 
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
@@ -13,6 +12,11 @@ public class DataStreamSerializer implements SerializedStrategy {
 
     public DataStreamSerializer() {
 
+    }
+
+    @FunctionalInterface
+    public interface ConsumerThrow<T> {
+        void accept(T t) throws IOException;
     }
 
     @Override
@@ -37,35 +41,21 @@ public class DataStreamSerializer implements SerializedStrategy {
                     case ACHIEVEMENT:
                     case QUALIFICATION:
                         dos.writeInt(((BulletedListSection) tmpSection).getContent().size());
-                        ((BulletedListSection) tmpSection).getContent().forEach(content -> {
-                            try {
-                                dos.writeUTF(content);
-                            } catch (IOException e) {
-                                throw new StorageException("Error write resume bulleted list section", null, e);
-                            }
-                        });
+                        writeWithException(((BulletedListSection) tmpSection).getContent(), dos, dos::writeUTF);
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
                         dos.writeInt(((OrganizationSection) tmpSection).getContent().size());
-                        ((OrganizationSection) tmpSection).getContent().forEach(content -> {
-                            try {
-                                dos.writeUTF(content.getOrganization().getName());
-                                dos.writeUTF(content.getOrganization().getUrl());
-                                dos.writeInt(content.getDates().size());
-                                content.getDates().forEach(experience -> {
-                                    try {
-                                        writeDate(experience.getDateStart(), dos);
-                                        writeDate(experience.getDateEnd(), dos);
-                                        dos.writeUTF(experience.getMainInfo());
-                                        dos.writeUTF(experience.getNote());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-                            } catch (IOException e) {
-                                throw new StorageException("Error write resume organization section", null, e);
-                            }
+                        writeWithException(((OrganizationSection) tmpSection).getContent(), dos, content -> {
+                            dos.writeUTF(content.getOrganization().getName());
+                            dos.writeUTF(content.getOrganization().getUrl());
+                            dos.writeInt(content.getDates().size());
+                            writeWithException(content.getDates(), dos, experience -> {
+                                writeDate(experience.getDateStart(), dos);
+                                writeDate(experience.getDateEnd(), dos);
+                                dos.writeUTF(experience.getMainInfo());
+                                dos.writeUTF(experience.getNote());
+                            });
                         });
                         break;
                 }
@@ -129,4 +119,11 @@ public class DataStreamSerializer implements SerializedStrategy {
         dos.writeInt(date.getYear());
         dos.writeInt(date.getMonthValue());
     }
+
+    private <T> void writeWithException(List<T> collection, DataOutputStream dos, ConsumerThrow<T> action) throws IOException {
+        for (T section : collection) {
+            action.accept(section);
+        }
+    }
+
 }
