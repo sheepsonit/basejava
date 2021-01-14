@@ -14,11 +14,6 @@ public class DataStreamSerializer implements SerializedStrategy {
 
     }
 
-    @FunctionalInterface
-    public interface ConsumerThrow<T> {
-        void accept(T t) throws IOException;
-    }
-
     @Override
     public void write(OutputStream os, Resume resume) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -40,16 +35,16 @@ public class DataStreamSerializer implements SerializedStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATION:
-                        dos.writeInt(((BulletedListSection) tmpSection).getContent().size());
                         writeWithException(((BulletedListSection) tmpSection).getContent(), dos, dos::writeUTF);
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        dos.writeInt(((OrganizationSection) tmpSection).getContent().size());
                         writeWithException(((OrganizationSection) tmpSection).getContent(), dos, content -> {
-                            dos.writeUTF(content.getOrganization().getName());
-                            dos.writeUTF(content.getOrganization().getUrl());
-                            dos.writeInt(content.getDates().size());
+
+                            Link organization = content.getOrganization();
+                            dos.writeUTF(organization.getName());
+                            dos.writeUTF(organization.getUrl());
+
                             writeWithException(content.getDates(), dos, experience -> {
                                 writeDate(experience.getDateStart(), dos);
                                 writeDate(experience.getDateEnd(), dos);
@@ -115,12 +110,18 @@ public class DataStreamSerializer implements SerializedStrategy {
         }
     }
 
+    @FunctionalInterface
+    public interface ConsumerThrow<T> {
+        void accept(T t) throws IOException;
+    }
+
     private void writeDate(YearMonth date, DataOutputStream dos) throws IOException {
         dos.writeInt(date.getYear());
         dos.writeInt(date.getMonthValue());
     }
 
     private <T> void writeWithException(List<T> collection, DataOutputStream dos, ConsumerThrow<T> action) throws IOException {
+        dos.writeInt(collection.size());
         for (T section : collection) {
             action.accept(section);
         }
