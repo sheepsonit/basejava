@@ -5,8 +5,8 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerializer implements SerializedStrategy {
 
@@ -19,12 +19,11 @@ public class DataStreamSerializer implements SerializedStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            dos.writeInt(resume.getContacts().size());
-            for (Map.Entry<ContactType, String> contact : resume.getContacts().entrySet()) {
+            writeWithException(resume.getContacts().entrySet(), dos, contact -> {
                 dos.writeUTF(contact.getKey().name());
                 dos.writeUTF(contact.getValue());
-            }
-            for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
+            });
+            writeWithException(resume.getSections().entrySet(), dos, section -> {
                 SectionType sectionType = section.getKey();
                 dos.writeUTF(sectionType.name());
                 AbstractSection tmpSection = section.getValue();
@@ -54,7 +53,7 @@ public class DataStreamSerializer implements SerializedStrategy {
                         });
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -67,8 +66,8 @@ public class DataStreamSerializer implements SerializedStrategy {
             for (int i = 0; i < cntContacts; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-
-            while (dis.available() > 0) {
+            int cntSections = dis.readInt();
+            for (int k = 0; k < cntSections; k++) {
                 String type = dis.readUTF();
 
                 switch (SectionType.valueOf(type)) {
@@ -120,7 +119,7 @@ public class DataStreamSerializer implements SerializedStrategy {
         dos.writeInt(date.getMonthValue());
     }
 
-    private <T> void writeWithException(List<T> collection, DataOutputStream dos, ConsumerThrow<T> action) throws IOException {
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, ConsumerThrow<T> action) throws IOException {
         dos.writeInt(collection.size());
         for (T section : collection) {
             action.accept(section);
