@@ -61,13 +61,10 @@ public class DataStreamSerializer implements SerializedStrategy {
     public Resume read(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            int cntContacts = dis.readInt();
 
-            for (int i = 0; i < cntContacts; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int cntSections = dis.readInt();
-            for (int k = 0; k < cntSections; k++) {
+            readWithException(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+
+            readWithException(dis, () -> {
                 String type = dis.readUTF();
 
                 switch (SectionType.valueOf(type)) {
@@ -77,26 +74,26 @@ public class DataStreamSerializer implements SerializedStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATION:
-
                         List<String> bulletedList = new ArrayList<>();
-                        readWithException(bulletedList, dis, dis::readUTF);
+                        readWithException(dis, () -> bulletedList.add(dis.readUTF()));
                         resume.addSection(SectionType.valueOf(type), new BulletedListSection(bulletedList));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
                         List<Experience> experienceList = new ArrayList<>();
-                        readWithException(experienceList, dis, () -> {
+                        readWithException(dis, () -> {
                             String organizationName = dis.readUTF();
                             String url = dis.readUTF();
+
                             List<Experience.DateIntervalExperience> dates = new ArrayList<>();
 
-                            readWithException(dates, dis, () -> new Experience.DateIntervalExperience(YearMonth.of(dis.readInt(), dis.readInt()), YearMonth.of(dis.readInt(), dis.readInt()), dis.readUTF(), dis.readUTF()));
-                            return new Experience(new Link(organizationName, url), dates);
+                            readWithException(dis, () -> dates.add(new Experience.DateIntervalExperience(YearMonth.of(dis.readInt(), dis.readInt()), YearMonth.of(dis.readInt(), dis.readInt()), dis.readUTF(), dis.readUTF())));
+                            experienceList.add(new Experience(new Link(organizationName, url), dates));
                         });
                         resume.addSection(SectionType.valueOf(type), new OrganizationSection(experienceList));
                         break;
                 }
-            }
+            });
 
             return resume;
         }
@@ -108,8 +105,8 @@ public class DataStreamSerializer implements SerializedStrategy {
     }
 
     @FunctionalInterface
-    public interface FunctionThrow<T> {
-        T apply() throws IOException;
+    public interface FunctionThrow {
+        void apply() throws IOException;
     }
 
     private void writeDate(YearMonth date, DataOutputStream dos) throws IOException {
@@ -124,10 +121,10 @@ public class DataStreamSerializer implements SerializedStrategy {
         }
     }
 
-    private <T> void readWithException(Collection<T> collection, DataInputStream dis, FunctionThrow<T> action) throws IOException {
+    private void readWithException(DataInputStream dis, FunctionThrow action) throws IOException {
         int cnt = dis.readInt();
         for (int i = 0; i < cnt; i++) {
-            collection.add(action.apply());
+            action.apply();
         }
     }
 
