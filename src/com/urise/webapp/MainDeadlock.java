@@ -6,42 +6,23 @@ public class MainDeadlock {
     private static Object LOCK = new Object();
 
     public static void main(String[] args) {
-        new Thread() {
-            @Override
-            public void run() {
-                synchronized (LOCK) {
-                    System.out.println(getName());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    synchronized (counter) {
-                        System.out.println("in counter");
-                        for (int i = 0; i < 1000; i++) {
-                            counter++;
-                        }
-                    }
-                }
+        new Thread(() -> doSomething(LOCK, counter)).start();
+        new Thread(() -> doSomething(counter, LOCK)).start();
+    }
+
+    public static void doSomething(Object firstLock, Object secondLock) {
+        System.out.println(Thread.currentThread().getName());
+        synchronized (firstLock) {
+            System.out.println("into first lock");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }.start();
-
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getName());
-
-            synchronized (counter) {
-                System.out.println("before inc counter");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                synchronized (LOCK) {
-                    System.out.println("in LOCK");
-
-                }
+            synchronized (secondLock) {
+                System.out.println("into second lock");
             }
-        }).start();
 
+        }
     }
 }
