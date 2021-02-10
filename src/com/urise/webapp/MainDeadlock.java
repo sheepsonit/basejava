@@ -1,26 +1,29 @@
 package com.urise.webapp;
 
+import org.w3c.dom.ls.LSOutput;
+
 public class MainDeadlock {
 
-    private static Integer counter = 0;
-    private static Object LOCK = new Object();
+    private static Object counter = 0;
+    private static Object lock = new Object();
 
     public static void main(String[] args) {
-        new Thread(() -> doSomething(LOCK, counter)).start();
-        new Thread(() -> doSomething(counter, LOCK)).start();
+        new Thread(() -> doSomething(lock, counter)).start();
+        new Thread(() -> doSomething(counter, lock)).start();
     }
 
     public static void doSomething(Object firstLock, Object secondLock) {
-        System.out.println(Thread.currentThread().getName());
+
         synchronized (firstLock) {
-            System.out.println("into first lock");
+            System.out.println("The thread " + Thread.currentThread().getName() + " has captured an object " + firstLock.toString());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.println("The thread " + Thread.currentThread().getName() + " is waiting to capture the object " + secondLock.toString());
             synchronized (secondLock) {
-                System.out.println("into second lock");
+                System.out.println("The thread " + Thread.currentThread().getName() + " has captured an object " + secondLock.toString());
             }
 
         }
