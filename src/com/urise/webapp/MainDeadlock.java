@@ -4,12 +4,12 @@ import org.w3c.dom.ls.LSOutput;
 
 public class MainDeadlock {
 
-    private static Object counter = 0;
-    private static Object lock = new Object();
+    private static Object lockOne = new Object();
+    private static Object lockTwo = new Object();
 
     public static void main(String[] args) {
-        new Thread(() -> doSomething(lock, counter)).start();
-        new Thread(() -> doSomething(counter, lock)).start();
+        new Thread(() -> doSomething(lockOne, lockTwo)).start();
+        new Thread(() -> doSomething(lockTwo, lockOne)).start();
     }
 
     public static void doSomething(Object firstLock, Object secondLock) {
