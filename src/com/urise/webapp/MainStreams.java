@@ -13,7 +13,11 @@ public class MainStreams {
     }
 
     private static int minValue(int[] values) {
-        return Arrays.stream(values).distinct().sorted().reduce((x, y) -> Integer.parseInt(Integer.toString(x).concat(Integer.toString(y)))).getAsInt();
+        return Arrays.stream(values).
+                distinct().
+                sorted().
+                reduce((x, y) -> Integer.parseInt(Integer.toString(x).concat(Integer.toString(y)))).
+                getAsInt();
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
