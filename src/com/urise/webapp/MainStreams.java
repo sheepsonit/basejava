@@ -1,9 +1,6 @@
 package com.urise.webapp;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -29,7 +26,13 @@ public class MainStreams {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        boolean isEven = integers.stream().reduce(Integer::sum).get() % 2 == 0;
-        return integers.stream().filter(isEven ? n -> n % 2 != 0 : n -> n % 2 == 0).collect(Collectors.toList());
+//        boolean isEven = integers.stream().mapToInt(Integer::intValue).sum() % 2 == 0;
+        int sum = integers.stream().mapToInt(Integer::intValue).sum();
+        return integers.stream().filter(n -> isEven(sum) && !isEven(n) || !isEven(sum) && isEven(n)).collect(Collectors.toList());
+//        return integers.stream().filter(isEven ? n -> n % 2 != 0 : n -> n % 2 == 0).collect(Collectors.toList());
+    }
+
+    private static boolean isEven(int value) {
+        return value % 2 == 0;
     }
 }
