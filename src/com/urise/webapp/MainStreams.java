@@ -13,26 +13,14 @@ public class MainStreams {
     }
 
     private static int minValue(int[] values) {
-        AtomicInteger i = new AtomicInteger(1);
         return Arrays.stream(values).
                 distinct().
-                boxed().
-                sorted(Comparator.reverseOrder()).
-                reduce(0, (x, y) -> {
-                    x += y * i.get();
-                    i.updateAndGet(v -> v * 10);
-                    return x;
-                });
+                sorted().
+                reduce(0, (x, y) -> x * 10 + y);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-//        boolean isEven = integers.stream().mapToInt(Integer::intValue).sum() % 2 == 0;
-        int sum = integers.stream().mapToInt(Integer::intValue).sum();
-        return integers.stream().filter(n -> isEven(sum) && !isEven(n) || !isEven(sum) && isEven(n)).collect(Collectors.toList());
-//        return integers.stream().filter(isEven ? n -> n % 2 != 0 : n -> n % 2 == 0).collect(Collectors.toList());
-    }
-
-    private static boolean isEven(int value) {
-        return value % 2 == 0;
+        int remainder = integers.stream().reduce(0, Integer::sum) % 2;
+        return integers.stream().filter(n -> n % 2 != remainder).collect(Collectors.toList());
     }
 }
