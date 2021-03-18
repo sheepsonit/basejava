@@ -55,7 +55,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     void deleteResume(File searchKey) {
         if (!searchKey.delete()) {
-            throw new StorageException("IO error ", null);
+            throw new StorageException("IO error ");
         }
     }
 
@@ -64,7 +64,7 @@ public class FileStorage extends AbstractStorage<File> {
         try {
             return serializedStrategy.read(new BufferedInputStream(new FileInputStream(searchKey)));
         } catch (IOException e) {
-            throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath(), null);
+            throw new StorageException("Couldn`t read file " + searchKey.getAbsolutePath());
         }
     }
 
@@ -98,7 +98,7 @@ public class FileStorage extends AbstractStorage<File> {
     private File[] getListFiles() {
         File[] fileResumes = directory.listFiles();
         if (fileResumes == null) {
-            throw new StorageException("Directory read error " + directory.getAbsolutePath(), null);
+            throw new StorageException("Directory read error " + directory.getAbsolutePath());
         }
         return fileResumes;
     }

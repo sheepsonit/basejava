@@ -11,109 +11,109 @@ public class ResumeTestData {
 
     public static Resume setupResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-        StringBuilder phoneNumber = new StringBuilder("+7(9");
-        for (int i = 0; i < 9; i++) {
-            if (i == 2)
-                phoneNumber.append(") ");
-            if (i == 5)
-                phoneNumber.append("-");
-            phoneNumber.append((int) (0 + Math.random() * 10));
-        }
-        System.out.println(phoneNumber);
-        resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
-        resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
+//        StringBuilder phoneNumber = new StringBuilder("+7(9");
+//        for (int i = 0; i < 9; i++) {
+//            if (i == 2)
+//                phoneNumber.append(") ");
+//            if (i == 5)
+//                phoneNumber.append("-");
+//            phoneNumber.append((int) (0 + Math.random() * 10));
+//        }
+//        System.out.println(phoneNumber);
+//        resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
+//        resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
 
-        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
-        resume.addSection(SectionType.OBJECTIVE, position);
-
-        AbstractSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
-        resume.addSection(SectionType.PERSONAL, personal);
-
-
-        List<String> listAchievements = new ArrayList<>();
-        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\"," +
-                "\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
-                "Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". " +
-                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
-        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
-                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-
-        AbstractSection achievement = new BulletedListSection(listAchievements);
-        resume.addSection(SectionType.ACHIEVEMENT, achievement);
-
-        List<String> listQualifications = new ArrayList<>();
-        listQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        listQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
-        listQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
-        listQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
-        listQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
-        listQualifications.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,");
-        listQualifications.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), " +
-                "JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
-
-        AbstractSection qualification = new BulletedListSection(listQualifications);
-        resume.addSection(SectionType.QUALIFICATION, qualification);
-
-        List<Experience> listExperiences = new ArrayList<>();
-
-        Experience sectionExp1 = new Experience("Java Online Projects",
-                "",
-                new Experience.DateIntervalExperience(
-                        YearMonth.of(2013, 10),
-                        YearMonth.now(),
-                        "Автор проекта.",
-                        "Создание, организация и проведение Java онлайн проектов и стажировок."));
-        listExperiences.add(sectionExp1);
-
-        Experience sectionExp2 = new Experience("Wrike",
-                "",
-                new Experience.DateIntervalExperience(
-                        YearMonth.of(2014, 10),
-                        YearMonth.of(2016, 1),
-                        "Старший разработчик (backend)",
-                        "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
-        listExperiences.add(sectionExp2);
-
-        AbstractSection experience = new OrganizationSection(listExperiences);
-        resume.addSection(SectionType.EXPERIENCE, experience);
-
-        List<Experience> educations = new ArrayList<>();
-
-        Experience sectionEducation1 = new Experience("Alcatel",
-                "",
-                new Experience.DateIntervalExperience(
-                        YearMonth.of(1997, 9),
-                        YearMonth.of(1998, 3),
-                        "6 месяцев обучения цифровым телефонным сетям (Москва)",
-                        ""));
-        educations.add(sectionEducation1);
-
-        Experience sectionEducation2 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-                "",
-                new Experience.DateIntervalExperience(
-                        YearMonth.of(1993, 9),
-                        YearMonth.of(1996, 7),
-                        "Аспирантура (программист С, С++)",
-                        ""),
-                new Experience.DateIntervalExperience(
-                        YearMonth.of(1987, 9),
-                        YearMonth.of(1993, 7),
-                        "Инженер (программист Fortran, C)",
-                        ""));
-        educations.add(sectionEducation2);
-
-        Experience sectionEducation3 = new Experience("Заочная физико-техническая школа при МФТИ",
-                null,
-                new Experience.DateIntervalExperience(
-                        YearMonth.of(1984, 9),
-                        YearMonth.of(1987, 6),
-                        "Закончил с отличием",
-                        null));
-        educations.add(sectionEducation3);
-
-        AbstractSection education = new OrganizationSection(educations);
-        resume.addSection(SectionType.EDUCATION, education);
+//        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+//        resume.addSection(SectionType.OBJECTIVE, position);
+//
+//        AbstractSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+//        resume.addSection(SectionType.PERSONAL, personal);
+//
+//
+//        List<String> listAchievements = new ArrayList<>();
+//        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\"," +
+//                "\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
+//                "Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". " +
+//                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
+//        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
+//                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
+//
+//        AbstractSection achievement = new BulletedListSection(listAchievements);
+//        resume.addSection(SectionType.ACHIEVEMENT, achievement);
+//
+//        List<String> listQualifications = new ArrayList<>();
+//        listQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+//        listQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+//        listQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
+//        listQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
+//        listQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
+//        listQualifications.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,");
+//        listQualifications.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), " +
+//                "JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
+//
+//        AbstractSection qualification = new BulletedListSection(listQualifications);
+//        resume.addSection(SectionType.QUALIFICATION, qualification);
+//
+//        List<Experience> listExperiences = new ArrayList<>();
+//
+//        Experience sectionExp1 = new Experience("Java Online Projects",
+//                "",
+//                new Experience.DateIntervalExperience(
+//                        YearMonth.of(2013, 10),
+//                        YearMonth.now(),
+//                        "Автор проекта.",
+//                        "Создание, организация и проведение Java онлайн проектов и стажировок."));
+//        listExperiences.add(sectionExp1);
+//
+//        Experience sectionExp2 = new Experience("Wrike",
+//                "",
+//                new Experience.DateIntervalExperience(
+//                        YearMonth.of(2014, 10),
+//                        YearMonth.of(2016, 1),
+//                        "Старший разработчик (backend)",
+//                        "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+//                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+//        listExperiences.add(sectionExp2);
+//
+//        AbstractSection experience = new OrganizationSection(listExperiences);
+//        resume.addSection(SectionType.EXPERIENCE, experience);
+//
+//        List<Experience> educations = new ArrayList<>();
+//
+//        Experience sectionEducation1 = new Experience("Alcatel",
+//                "",
+//                new Experience.DateIntervalExperience(
+//                        YearMonth.of(1997, 9),
+//                        YearMonth.of(1998, 3),
+//                        "6 месяцев обучения цифровым телефонным сетям (Москва)",
+//                        ""));
+//        educations.add(sectionEducation1);
+//
+//        Experience sectionEducation2 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+//                "",
+//                new Experience.DateIntervalExperience(
+//                        YearMonth.of(1993, 9),
+//                        YearMonth.of(1996, 7),
+//                        "Аспирантура (программист С, С++)",
+//                        ""),
+//                new Experience.DateIntervalExperience(
+//                        YearMonth.of(1987, 9),
+//                        YearMonth.of(1993, 7),
+//                        "Инженер (программист Fortran, C)",
+//                        ""));
+//        educations.add(sectionEducation2);
+//
+//        Experience sectionEducation3 = new Experience("Заочная физико-техническая школа при МФТИ",
+//                null,
+//                new Experience.DateIntervalExperience(
+//                        YearMonth.of(1984, 9),
+//                        YearMonth.of(1987, 6),
+//                        "Закончил с отличием",
+//                        null));
+//        educations.add(sectionEducation3);
+//
+//        AbstractSection education = new OrganizationSection(educations);
+//        resume.addSection(SectionType.EDUCATION, education);
 
         return resume;
     }

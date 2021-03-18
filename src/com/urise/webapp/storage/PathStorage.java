@@ -71,7 +71,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return serializedStrategy.read(new BufferedInputStream(Files.newInputStream(searchKey)));
         } catch (IOException e) {
-            throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath(), null);
+            throw new StorageException("Couldn`t read file " + searchKey.toAbsolutePath());
         }
     }
 
@@ -100,7 +100,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Directory read error " + directory, null);
+            throw new StorageException("Directory read error " + directory);
         }
     }
 }
