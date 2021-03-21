@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,10 +19,10 @@ import static org.junit.Assert.assertNotNull;
 public abstract class AbstractStorageTest {
     Storage storage;
     static final File STORAGE_DIR = Config.get().getStorageDir();
-    static final String UUID_1 = "uuid1";
-    static final String UUID_2 = "uuid2";
-    static final String UUID_3 = "uuid3";
-    static final String DUMMY = "dummy";
+    static final String UUID_1 = UUID.randomUUID().toString();
+    static final String UUID_2 = UUID.randomUUID().toString();
+    static final String UUID_3 = UUID.randomUUID().toString();
+    static final String DUMMY = UUID.randomUUID().toString();
 
     static final Resume RESUME_1 = ResumeTestData.setupResume(UUID_1, "fullName_uuid1");
     static final Resume RESUME_2 = ResumeTestData.setupResume(UUID_2, "fullName_uuid2");
@@ -64,7 +65,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume resume = ResumeTestData.setupResume("uuid4", "fullName_uuid4");
+        Resume resume = ResumeTestData.setupResume(UUID.randomUUID().toString(), "fullName_uuid4");
         storage.save(resume);
         assertEquals(resume, storage.get(resume.getUuid()));
         assertSize(4);

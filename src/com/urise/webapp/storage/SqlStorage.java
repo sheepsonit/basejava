@@ -15,91 +15,90 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class SqlStorage implements Storage {
 
-    public final ConnectionFactory connectionFactory;
+    private SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
-        connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
     @Override
     public void clear() {
-        SqlHelper.dbConnectAndExecute(connectionFactory, "delete from resume", (PreparedStatement::execute));
+        sqlHelper.dbConnectAndExecute("delete from resume", PreparedStatement::execute);
     }
 
     @Override
     public void update(Resume resume) {
-        SqlHelper.dbConnectAndExecute(connectionFactory, "update resume set full_name =? where uuid =?",
+        sqlHelper.dbConnectAndExecute("update resume set full_name =? where uuid =?",
                 ps -> {
+                    String uuid = resume.getUuid();
                     ps.setString(1, resume.getFullName());
-                    ps.setString(2, resume.getUuid());
-                    ps.execute();
-                    if (ps.getUpdateCount() == 0) {
-                        throw new NotExistStorageException(resume.getUuid());
+                    ps.setString(2, uuid);
+                    int updCnt = ps.executeUpdate();
+                    if (updCnt == 0) {
+                        throw new NotExistStorageException(uuid);
                     }
+                    return null;
                 });
     }
 
     @Override
     public void save(Resume resume) {
-        SqlHelper.dbConnectAndExecute(connectionFactory, "insert into resume (uuid, full_name) VALUES (?,?)",
+        sqlHelper.dbConnectAndExecute("insert into resume (uuid, full_name) VALUES (?,?)",
                 ps -> {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, resume.getFullName());
-                    ps.execute();
+                    return ps.execute();
                 });
     }
 
     @Override
     public Resume get(String uuid) {
-        AtomicReference<Resume> resume = new AtomicReference<>();
-        SqlHelper.dbConnectAndExecute(connectionFactory, "select * from resume where uuid =?",
+        return sqlHelper.dbConnectAndExecute("select * from resume where uuid =?",
                 ps -> {
                     ps.setString(1, uuid);
                     ResultSet resultSet = ps.executeQuery();
-                    if (resultSet.next()) {
-                        resume.set(new Resume(uuid, resultSet.getString("full_name").strip()));
-                    } else {
+                    if (!resultSet.next()) {
                         throw new NotExistStorageException(uuid);
                     }
+                    return new Resume(uuid, resultSet.getString("full_name"));
                 });
-        return resume.get();
     }
 
     @Override
     public void delete(String uuid) {
-        SqlHelper.dbConnectAndExecute(connectionFactory, "delete from resume where uuid =?",
+        sqlHelper.dbConnectAndExecute("delete from resume where uuid =?",
                 ps -> {
                     ps.setString(1, uuid);
-                    ps.execute();
-                    if (ps.getUpdateCount() == 0) {
+                    int updCnt = ps.executeUpdate();
+                    if (updCnt == 0) {
                         throw new NotExistStorageException(uuid);
                     }
+                    return null;
                 });
     }
 
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> resumes = new ArrayList<>();
-        SqlHelper.dbConnectAndExecute(connectionFactory, "select * from resume",
+        sqlHelper.dbConnectAndExecute("select * from resume order by full_name, uuid",
                 ps -> {
                     ResultSet resultSet = ps.executeQuery();
                     while (resultSet.next()) {
-                        resumes.add(new Resume(resultSet.getString("uuid").strip(),
-                                resultSet.getString("full_name").strip()));
+                        resumes.add(new Resume(resultSet.getString("uuid"),
+                                resultSet.getString("full_name")));
                     }
+                    return null;
                 });
         return resumes;
     }
 
     @Override
     public int size() {
-        AtomicInteger cnt = new AtomicInteger();
-        SqlHelper.dbConnectAndExecute(connectionFactory, "select count(uuid) cnt from resume",
+        return sqlHelper.dbConnectAndExecute("select count(uuid) cnt from resume",
                 ps -> {
                     ResultSet resultSet = ps.executeQuery();
                     resultSet.next();
-                    cnt.set(resultSet.getInt("cnt"));
+                    return resultSet.getInt("cnt");
                 });
-        return cnt.get();
     }
 }
