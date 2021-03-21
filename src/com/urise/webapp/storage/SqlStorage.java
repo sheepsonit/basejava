@@ -1,21 +1,16 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.sql.ConnectionFactory;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SqlStorage implements Storage {
 
-    private SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -33,8 +28,7 @@ public class SqlStorage implements Storage {
                     String uuid = resume.getUuid();
                     ps.setString(1, resume.getFullName());
                     ps.setString(2, uuid);
-                    int updCnt = ps.executeUpdate();
-                    if (updCnt == 0) {
+                    if (ps.executeUpdate() == 0) {
                         throw new NotExistStorageException(uuid);
                     }
                     return null;
@@ -69,8 +63,7 @@ public class SqlStorage implements Storage {
         sqlHelper.dbConnectAndExecute("delete from resume where uuid =?",
                 ps -> {
                     ps.setString(1, uuid);
-                    int updCnt = ps.executeUpdate();
-                    if (updCnt == 0) {
+                    if (ps.executeUpdate() == 0) {
                         throw new NotExistStorageException(uuid);
                     }
                     return null;
