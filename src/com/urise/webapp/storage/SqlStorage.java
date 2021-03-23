@@ -6,10 +6,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SqlStorage implements Storage {
@@ -94,18 +91,25 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> resumes = new ArrayList<>();
-        sqlHelper.dbConnectAndExecute("select * from resume order by full_name, uuid",
+        sqlHelper.dbConnectAndExecute("select * from resume r " +
+                        " left join contact c " +
+                        " on r.uuid = c.resume_uuid " +
+                        " order by full_name, uuid ",
                 ps -> {
                     ResultSet resultSet = ps.executeQuery();
                     while (resultSet.next()) {
-                        Resume resume = new Resume(resultSet.getString("uuid"),
-                                resultSet.getString("full_name"));
-                        sqlHelper.dbConnectAndExecute("select * from contact where resume_uuid =?",
-                                ps1 -> {
-                                    resume.addContacts(getContacts(ps1, resume.getUuid()));
-                                    return null;
-                                });
-                        resumes.add(resume);
+                        String uuid = resultSet.getString("uuid");
+                        Resume resume = resumes.stream().filter(r -> r.getUuid().equals(uuid)).
+                                findFirst().
+                                orElse(new Resume(uuid,
+                                        resultSet.getString("full_name")));
+
+                        resume.addContact(ContactType.valueOf(resultSet.getString("type")),
+                                resultSet.getString("value"));
+
+                        if (!resumes.contains(resume)) {
+                            resumes.add(resume);
+                        }
                     }
                     return null;
                 });
