@@ -11,17 +11,17 @@ public class ResumeTestData {
 
     public static Resume setupResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-//        StringBuilder phoneNumber = new StringBuilder("+7(9");
-//        for (int i = 0; i < 9; i++) {
-//            if (i == 2)
-//                phoneNumber.append(") ");
-//            if (i == 5)
-//                phoneNumber.append("-");
-//            phoneNumber.append((int) (0 + Math.random() * 10));
-//        }
-//        System.out.println(phoneNumber);
-//        resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
-//        resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
+        StringBuilder phoneNumber = new StringBuilder("+7(9");
+        for (int i = 0; i < 9; i++) {
+            if (i == 2)
+                phoneNumber.append(") ");
+            if (i == 5)
+                phoneNumber.append("-");
+            phoneNumber.append((int) (0 + Math.random() * 10));
+        }
+        System.out.println(phoneNumber);
+        resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
+        resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
 
 //        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
 //        resume.addSection(SectionType.OBJECTIVE, position);
