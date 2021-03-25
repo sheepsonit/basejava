@@ -90,7 +90,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>();
+        List<Resume> resumes = new LinkedList<>();
         sqlHelper.dbConnectAndExecute("select * from resume r " +
                         " left join contact c " +
                         " on r.uuid = c.resume_uuid " +
@@ -104,9 +104,13 @@ public class SqlStorage implements Storage {
                                 orElse(new Resume(uuid,
                                         resultSet.getString("full_name")));
 
-                        resume.addContact(ContactType.valueOf(resultSet.getString("type")),
-                                resultSet.getString("value"));
-
+                        String type = resultSet.getString("type");
+                        if (type != null) {
+                            if (!type.isEmpty()) {
+                                resume.addContact(ContactType.valueOf(type),
+                                        resultSet.getString("value"));
+                            }
+                        }
                         if (!resumes.contains(resume)) {
                             resumes.add(resume);
                         }
