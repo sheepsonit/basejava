@@ -8,6 +8,7 @@ import com.urise.webapp.sql.SqlHelper;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class SqlStorage implements Storage {
 
@@ -90,7 +91,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = new LinkedList<>();
+        TreeMap<String, Resume> resumes = new TreeMap<>();
+
         sqlHelper.dbConnectAndExecute("select * from resume r " +
                         " left join contact c " +
                         " on r.uuid = c.resume_uuid " +
@@ -99,10 +101,9 @@ public class SqlStorage implements Storage {
                     ResultSet resultSet = ps.executeQuery();
                     while (resultSet.next()) {
                         String uuid = resultSet.getString("uuid");
-                        Resume resume = resumes.stream().filter(r -> r.getUuid().equals(uuid)).
-                                findFirst().
-                                orElse(new Resume(uuid,
-                                        resultSet.getString("full_name")));
+
+                        Resume resume = resumes.getOrDefault(uuid, new Resume(uuid,
+                                resultSet.getString("full_name")));
 
                         String type = resultSet.getString("type");
                         if (type != null) {
@@ -111,13 +112,12 @@ public class SqlStorage implements Storage {
                                         resultSet.getString("value"));
                             }
                         }
-                        if (!resumes.contains(resume)) {
-                            resumes.add(resume);
-                        }
+                        resumes.put(uuid, resume);
                     }
                     return null;
                 });
-        return resumes;
+
+        return new ArrayList<>(resumes.values());
     }
 
     @Override
