@@ -164,11 +164,11 @@ public class SqlStorage implements Storage {
                         ps.setString(2, ((TextSection) contact.getValue()).getContent());
                     } else {
                         List<String> content = ((BulletedListSection) contact.getValue()).getContent();
-                        for (int i = 0; i < content.size(); i++) {
-                            ps.setString(2, content.stream().reduce("",(x,y) -> x + "\n" + y));
-                        }
+                        ps.setString(2, content.stream().reduce("", (x, y) -> x + y + "\n"));
                     }
                     ps.setString(3, resume.getUuid());
+                    ps.addBatch();
+
                 }
             }
             ps.executeBatch();
