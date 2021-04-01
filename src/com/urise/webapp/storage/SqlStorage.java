@@ -91,7 +91,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        LinkedHashMap<String, Resume> resumes = new LinkedHashMap<>();
+        Map<String, Resume> resumes = new LinkedHashMap<>();
 
         sqlHelper.dbConnectAndExecute("select * from resume r " +
                         " left join contact c " +
