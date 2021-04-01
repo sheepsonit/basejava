@@ -72,7 +72,7 @@ public class Resume implements Serializable {
         this.sections.put(type, section);
     }
 
-    public void setSections(Map<SectionType, AbstractSection> sections) {
+    public void addSections(Map<SectionType, AbstractSection> sections) {
         this.sections.putAll(sections);
     }
 

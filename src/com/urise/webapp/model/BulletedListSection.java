@@ -27,6 +27,10 @@ public class BulletedListSection extends AbstractSection {
         return list;
     }
 
+    public void addContent(String content) {
+        list.add(content);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

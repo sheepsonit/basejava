@@ -23,36 +23,36 @@ public class ResumeTestData {
         resume.addContact(ContactType.PHONE_NUMBER, phoneNumber.toString());
         resume.addContact(ContactType.MAIL, uuid + "@yandex.ru");
 
-//        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
-//        resume.addSection(SectionType.OBJECTIVE, position);
-//
-//        AbstractSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
-//        resume.addSection(SectionType.PERSONAL, personal);
-//
-//
-//        List<String> listAchievements = new ArrayList<>();
-//        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\"," +
-//                "\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
-//                "Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". " +
-//                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
-//        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
-//                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-//
-//        AbstractSection achievement = new BulletedListSection(listAchievements);
-//        resume.addSection(SectionType.ACHIEVEMENT, achievement);
-//
-//        List<String> listQualifications = new ArrayList<>();
-//        listQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-//        listQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
-//        listQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
-//        listQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
-//        listQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
-//        listQualifications.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,");
-//        listQualifications.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), " +
-//                "JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
-//
-//        AbstractSection qualification = new BulletedListSection(listQualifications);
-//        resume.addSection(SectionType.QUALIFICATION, qualification);
+        AbstractSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        resume.addSection(SectionType.OBJECTIVE, position);
+
+        AbstractSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        resume.addSection(SectionType.PERSONAL, personal);
+
+
+        List<String> listAchievements = new ArrayList<>();
+        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\"," +
+                "\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
+                "Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". " +
+                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
+        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
+                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
+
+        AbstractSection achievement = new BulletedListSection(listAchievements);
+        resume.addSection(SectionType.ACHIEVEMENT, achievement);
+
+        List<String> listQualifications = new ArrayList<>();
+        listQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        listQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        listQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
+        listQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
+        listQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
+        listQualifications.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,");
+        listQualifications.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), " +
+                "JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
+
+        AbstractSection qualification = new BulletedListSection(listQualifications);
+        resume.addSection(SectionType.QUALIFICATION, qualification);
 //
 //        List<Experience> listExperiences = new ArrayList<>();
 //
