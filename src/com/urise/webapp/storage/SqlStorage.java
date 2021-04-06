@@ -7,7 +7,6 @@ import com.urise.webapp.sql.SqlHelper;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class SqlStorage implements Storage {
 
@@ -76,10 +75,10 @@ public class SqlStorage implements Storage {
                 resume.set(new Resume(uuid, resultSet.getString("full_name")));
             }
             try (PreparedStatement ps = connection.prepareStatement("select * from contact where resume_uuid =?")) {
-                resume.get().addContacts(getContacts(ps, resume.get().getUuid()));
+                resume.get().addContacts(getContacts(ps, uuid));
             }
             try (PreparedStatement ps = connection.prepareStatement("select * from section where resume_uuid =?")) {
-                resume.get().addSections(getSections(ps, resume.get().getUuid()));
+                resume.get().addSections(getSections(ps, uuid));
             }
             return resume.get();
         });
@@ -102,31 +101,31 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         Map<String, Resume> resumes = new LinkedHashMap<>();
 
-        sqlHelper.dbConnectAndExecute("select * from resume r order by full_name, uuid ",
-                ps -> {
-                    ResultSet resultSet = ps.executeQuery();
-                    while (resultSet.next()) {
-                        String uuid = resultSet.getString("uuid");
+        sqlHelper.dbTransactionExecute(connection -> {
+            String uuid;
 
-                        Resume resume = resumes.getOrDefault(uuid, new Resume(uuid,
-                                resultSet.getString("full_name")));
+            try (PreparedStatement ps = connection.prepareStatement("select * from resume r order by full_name, uuid ")) {
+                ResultSet resultSet = ps.executeQuery();
+                while (resultSet.next()) {
+                    uuid = resultSet.getString("uuid");
 
-                        sqlHelper.dbConnectAndExecute("select * from contact where resume_uuid =?", ps1 -> {
-                            resume.addContacts(getContacts(ps1, resume.getUuid()));
-                            return null;
-                        });
+                    Resume resume = resumes.getOrDefault(uuid, new Resume(uuid,
+                            resultSet.getString("full_name")));
 
-                        sqlHelper.dbConnectAndExecute("select * from section where resume_uuid =?", ps2 -> {
-                            resume.addSections(getSections(ps2, resume.getUuid()));
-                            return null;
-                        });
-                        resumes.put(uuid, resume);
+                    try (PreparedStatement ps1 = connection.prepareStatement("select * from contact where resume_uuid =?")) {
+                        resume.addContacts(getContacts(ps1, uuid));
                     }
-                    return null;
-                });
+                    try (PreparedStatement ps1 = connection.prepareStatement("select * from section where resume_uuid =?")) {
+                        resume.addSections(getSections(ps1, uuid));
+                    }
 
+                    resumes.put(uuid, resume);
+                }
+            }
 
-        return new ArrayList<>(resumes.values());
+            return null;
+        });
+        return Arrays.asList(resumes.values().toArray(new Resume[]{}));
     }
 
     @Override
@@ -157,18 +156,26 @@ public class SqlStorage implements Storage {
                 "insert into section (type, content, resume_uuid) " +
                         "VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, AbstractSection> contact : resume.getSections().entrySet()) {
-                if (!contact.getKey().equals(SectionType.EDUCATION) && !contact.getKey().equals(SectionType.EXPERIENCE)) {
 
-                    ps.setString(1, contact.getKey().name());
-                    if (contact.getKey().equals(SectionType.PERSONAL) || contact.getKey().equals(SectionType.OBJECTIVE)) {
+                switch (contact.getKey()) {
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        break;
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        ps.setString(1, contact.getKey().name());
                         ps.setString(2, ((TextSection) contact.getValue()).getContent());
-                    } else {
+                        ps.setString(3, resume.getUuid());
+                        ps.addBatch();
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATION:
+                        ps.setString(1, contact.getKey().name());
                         List<String> content = ((BulletedListSection) contact.getValue()).getContent();
-                        ps.setString(2, content.stream().reduce("", (x, y) -> x + y + "\n"));
-                    }
-                    ps.setString(3, resume.getUuid());
-                    ps.addBatch();
-
+                        ps.setString(2, String.join("\n", content));
+                        ps.setString(3, resume.getUuid());
+                        ps.addBatch();
+                        break;
                 }
             }
             ps.executeBatch();
@@ -183,13 +190,21 @@ public class SqlStorage implements Storage {
         while (rs.next()) {
             SectionType sectionType = SectionType.valueOf(rs.getString("type"));
 
-            if (sectionType.equals(SectionType.PERSONAL) || sectionType.equals(SectionType.OBJECTIVE)) {
-                sectionMap.put(sectionType,
-                        new TextSection(rs.getString("content")));
-            } else if (sectionType.equals(SectionType.QUALIFICATION) || sectionType.equals(SectionType.ACHIEVEMENT)) {
-                sectionMap.put(sectionType,
-                        new BulletedListSection(rs.getString("content").split("\n")));
+            switch (sectionType) {
+                case EDUCATION:
+                case EXPERIENCE:
+                    break;
+                case PERSONAL:
+                case OBJECTIVE:
+                    sectionMap.put(sectionType, new TextSection(rs.getString("content")));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATION:
+                    sectionMap.put(sectionType,
+                            new BulletedListSection(rs.getString("content").split("\n")));
+                    break;
             }
+
         }
 
         return sectionMap;
