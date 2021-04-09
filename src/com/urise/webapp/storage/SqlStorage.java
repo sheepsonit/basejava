@@ -6,7 +6,6 @@ import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SqlStorage implements Storage {
 
@@ -69,23 +68,23 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        AtomicReference<Resume> resume = new AtomicReference<>();
         return sqlHelper.dbTransactionExecute(connection -> {
+            Resume resume;
             try (PreparedStatement ps = connection.prepareStatement("select * from resume where uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet resultSet = ps.executeQuery();
                 if (!resultSet.next()) {
                     throw new NotExistStorageException(uuid);
                 }
-                resume.set(new Resume(uuid, resultSet.getString("full_name")));
+                resume = new Resume(uuid, resultSet.getString("full_name"));
             }
             try (PreparedStatement ps = connection.prepareStatement("select * from contact where resume_uuid =?")) {
-                resume.get().addContacts(getContacts(ps, uuid));
+                resume.addContacts(getContacts(ps, uuid));
             }
             try (PreparedStatement ps = connection.prepareStatement("select * from section where resume_uuid =?")) {
-                resume.get().addSections(getSections(ps, uuid));
+                resume.addSections(getSections(ps, uuid));
             }
-            return resume.get();
+            return resume;
         });
     }
 
@@ -104,11 +103,10 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        Map<String, Resume> resumes = new LinkedHashMap<>();
 
-        sqlHelper.dbTransactionExecute(connection -> {
+        return sqlHelper.dbTransactionExecute(connection -> {
             String uuid;
-
+            Map<String, Resume> resumes = new LinkedHashMap<>();
             try (PreparedStatement ps = connection.prepareStatement("select * from resume r order by full_name, uuid ")) {
                 ResultSet resultSet = ps.executeQuery();
                 while (resultSet.next()) {
@@ -128,9 +126,8 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            return null;
+            return new ArrayList<>(resumes.values());
         });
-        return Arrays.asList(resumes.values().toArray(new Resume[]{}));
     }
 
     @Override
@@ -158,7 +155,7 @@ public class SqlStorage implements Storage {
 
     private void writeSections(Resume resume, Connection connection) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "insert into section (type, content, resume_uuid) " +
+                "insert into section (type, value, resume_uuid) " +
                         "VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, AbstractSection> contact : resume.getSections().entrySet()) {
 
@@ -168,20 +165,17 @@ public class SqlStorage implements Storage {
                         break;
                     case PERSONAL:
                     case OBJECTIVE:
-                        ps.setString(1, contact.getKey().name());
                         ps.setString(2, ((TextSection) contact.getValue()).getContent());
-                        ps.setString(3, resume.getUuid());
-                        ps.addBatch();
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATION:
-                        ps.setString(1, contact.getKey().name());
                         List<String> content = ((BulletedListSection) contact.getValue()).getContent();
                         ps.setString(2, String.join("\n", content));
-                        ps.setString(3, resume.getUuid());
-                        ps.addBatch();
                         break;
                 }
+                ps.setString(1, contact.getKey().name());
+                ps.setString(3, resume.getUuid());
+                ps.addBatch();
             }
             ps.executeBatch();
         }
@@ -201,12 +195,12 @@ public class SqlStorage implements Storage {
                     break;
                 case PERSONAL:
                 case OBJECTIVE:
-                    sectionMap.put(sectionType, new TextSection(rs.getString("content")));
+                    sectionMap.put(sectionType, new TextSection(rs.getString("value")));
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATION:
                     sectionMap.put(sectionType,
-                            new BulletedListSection(rs.getString("content").split("\n")));
+                            new BulletedListSection(rs.getString("value").split("\n")));
                     break;
             }
 

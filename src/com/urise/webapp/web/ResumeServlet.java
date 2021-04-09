@@ -2,6 +2,7 @@ package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.SqlStorage;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -10,6 +11,15 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
+
+    private SqlStorage sqlStorage;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        sqlStorage =  Config.get().getSqlStorage();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -18,7 +28,7 @@ public class ResumeServlet extends HttpServlet {
 //        String param = request.getParameter("name");
 //        response.getWriter().write("Hello " + (param == null ? "Resumes!" : param + "!"));
         PrintWriter printWriter = response.getWriter();
-        List<Resume> resumes = Config.get().getSqlStorage().getAllSorted();
+        List<Resume> resumes = sqlStorage.getAllSorted();
         printWriter.println("Количество резюме: " + resumes.size());
         printWriter.println("<h1>Список резюме</h1>");
         printWriter.println("<table>");
