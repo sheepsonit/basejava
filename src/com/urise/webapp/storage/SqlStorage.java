@@ -115,14 +115,40 @@ public class SqlStorage implements Storage {
                     Resume resume = resumes.getOrDefault(uuid, new Resume(uuid,
                             resultSet.getString("full_name")));
 
-                    try (PreparedStatement ps1 = connection.prepareStatement("select * from contact where resume_uuid =?")) {
-                        resume.addContacts(getContacts(ps1, uuid));
-                    }
-                    try (PreparedStatement ps1 = connection.prepareStatement("select * from section where resume_uuid =?")) {
-                        resume.addSections(getSections(ps1, uuid));
-                    }
 
                     resumes.put(uuid, resume);
+                }
+            }
+            try (PreparedStatement ps1 = connection.prepareStatement("select c.resume_uuid as uuid, " +
+                    "c.type as contact_type, c.value as contact_value, " +
+                    "s.type as section_type, s.value as section_value " +
+                    "from contact c " +
+                    "join section s on c.resume_uuid = s.resume_uuid")) {
+                ResultSet rs = ps1.executeQuery();
+
+                while (rs.next()) {
+                    Resume resume = resumes.get(rs.getString("uuid"));
+
+                    resume.addContact(ContactType.valueOf(rs.getString("contact_type")),
+                            rs.getString("contact_value"));
+
+                    SectionType sectionType = SectionType.valueOf(rs.getString("section_type"));
+
+                    switch (sectionType) {
+                        case EDUCATION:
+                        case EXPERIENCE:
+                            break;
+                        case PERSONAL:
+                        case OBJECTIVE:
+                            resume.addSection(sectionType, new TextSection(rs.getString("section_value")));
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATION:
+                            resume.addSection(sectionType,
+                                    new BulletedListSection(rs.getString("section_value").split("\n")));
+                            break;
+                    }
+                    resumes.put(resume.getUuid(), resume);
                 }
             }
 
