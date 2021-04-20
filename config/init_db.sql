@@ -21,3 +21,19 @@ create table contact
 
 create unique index contact_uuid_type_index
     on contact (resume_uuid, type);
+
+create table section
+(
+    type_id     serial   not null
+        constraint section_type_pk
+            primary key,
+    type        text,
+    value       text,
+    resume_uuid char(36) not null
+        constraint section_resume_uuid_fk
+            references resume
+            on update restrict on delete cascade
+);
+
+create unique index section_type_type_type_id_index
+    on section (type, type_id);
