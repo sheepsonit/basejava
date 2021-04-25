@@ -1,13 +1,14 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.SqlStorage;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
@@ -17,7 +18,7 @@ public class ResumeServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        sqlStorage =  Config.get().getSqlStorage();
+        sqlStorage = Config.get().getSqlStorage();
     }
 
     @Override
@@ -27,22 +28,31 @@ public class ResumeServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
 //        String param = request.getParameter("name");
 //        response.getWriter().write("Hello " + (param == null ? "Resumes!" : param + "!"));
-        PrintWriter printWriter = response.getWriter();
         List<Resume> resumes = sqlStorage.getAllSorted();
-        printWriter.println("Количество резюме: " + resumes.size());
-        printWriter.println("<h1>Список резюме</h1>");
-        printWriter.println("<table>");
-        printWriter.println("<tr>");
-        printWriter.println("<th>Uuid</th>");
-        printWriter.println("<th>Full name</th>");
-        printWriter.println("</tr>");
+        Writer writer = response.getWriter();
+        writer.write("<html>" +
+                "<head>" +
+                "<meta charset=\"UTF-8\">" +
+                "    <link rel=\"stylesheet\" href=\"css/style.css\">" +
+                "    <title>Список всех резюме.</title>" +
+                "</head>" +
+                "<body>" +
+                "<section>" +
+                "<table border='1' cellpadding='8' cellspacing='0'>" +
+                "   <tr>" +
+                "   <th>Имя</th>" +
+                "   <th>Email</th>" +
+                "   </tr>");
         for (Resume resume : resumes) {
-            printWriter.println("<tr>");
-            printWriter.println("<td>" + resume.getUuid() + "</td>");
-            printWriter.println("<td>" + resume.getFullName() + "</td>");
-            printWriter.println("</tr>");
+            writer.write("<tr>" +
+                    "<td><a href='resume?uuid=' " + resume.getUuid() + "'>" + resume.getFullName() + "</a></td>" +
+                    "<td>" + resume.getContact(ContactType.MAIL) + "</td>" +
+                    "</tr>");
         }
-        printWriter.println("</table>");
+        writer.write("</table>" +
+                "</section>" +
+                "</body>" +
+                "</html");
     }
 
     @Override
