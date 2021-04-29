@@ -23,36 +23,8 @@ public class ResumeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-//        String param = request.getParameter("name");
-//        response.getWriter().write("Hello " + (param == null ? "Resumes!" : param + "!"));
-        List<Resume> resumes = sqlStorage.getAllSorted();
-        Writer writer = response.getWriter();
-        writer.write("<html>" +
-                "<head>" +
-                "<meta charset=\"UTF-8\">" +
-                "    <link rel=\"stylesheet\" href=\"css/style.css\">" +
-                "    <title>Список всех резюме.</title>" +
-                "</head>" +
-                "<body>" +
-                "<section>" +
-                "<table border='1' cellpadding='8' cellspacing='0'>" +
-                "   <tr>" +
-                "   <th>Имя</th>" +
-                "   <th>Email</th>" +
-                "   </tr>");
-        for (Resume resume : resumes) {
-            writer.write("<tr>" +
-                    "<td><a href='resume?uuid=' " + resume.getUuid() + "'>" + resume.getFullName() + "</a></td>" +
-                    "<td>" + resume.getContact(ContactType.MAIL) + "</td>" +
-                    "</tr>");
-        }
-        writer.write("</table>" +
-                "</section>" +
-                "</body>" +
-                "</html");
+        request.setAttribute("resumes", sqlStorage.getAllSorted());
+        request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request,response);
     }
 
     @Override
