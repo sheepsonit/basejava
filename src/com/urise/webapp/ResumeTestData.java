@@ -53,67 +53,67 @@ public class ResumeTestData {
 
         AbstractSection qualification = new BulletedListSection(listQualifications);
         resume.addSection(SectionType.QUALIFICATION, qualification);
-//
-//        List<Experience> listExperiences = new ArrayList<>();
-//
-//        Experience sectionExp1 = new Experience("Java Online Projects",
-//                "",
-//                new Experience.DateIntervalExperience(
-//                        YearMonth.of(2013, 10),
-//                        YearMonth.now(),
-//                        "Автор проекта.",
-//                        "Создание, организация и проведение Java онлайн проектов и стажировок."));
-//        listExperiences.add(sectionExp1);
-//
-//        Experience sectionExp2 = new Experience("Wrike",
-//                "",
-//                new Experience.DateIntervalExperience(
-//                        YearMonth.of(2014, 10),
-//                        YearMonth.of(2016, 1),
-//                        "Старший разработчик (backend)",
-//                        "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-//                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
-//        listExperiences.add(sectionExp2);
-//
-//        AbstractSection experience = new OrganizationSection(listExperiences);
-//        resume.addSection(SectionType.EXPERIENCE, experience);
-//
-//        List<Experience> educations = new ArrayList<>();
-//
-//        Experience sectionEducation1 = new Experience("Alcatel",
-//                "",
-//                new Experience.DateIntervalExperience(
-//                        YearMonth.of(1997, 9),
-//                        YearMonth.of(1998, 3),
-//                        "6 месяцев обучения цифровым телефонным сетям (Москва)",
-//                        ""));
-//        educations.add(sectionEducation1);
-//
-//        Experience sectionEducation2 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-//                "",
-//                new Experience.DateIntervalExperience(
-//                        YearMonth.of(1993, 9),
-//                        YearMonth.of(1996, 7),
-//                        "Аспирантура (программист С, С++)",
-//                        ""),
-//                new Experience.DateIntervalExperience(
-//                        YearMonth.of(1987, 9),
-//                        YearMonth.of(1993, 7),
-//                        "Инженер (программист Fortran, C)",
-//                        ""));
-//        educations.add(sectionEducation2);
-//
-//        Experience sectionEducation3 = new Experience("Заочная физико-техническая школа при МФТИ",
-//                null,
-//                new Experience.DateIntervalExperience(
-//                        YearMonth.of(1984, 9),
-//                        YearMonth.of(1987, 6),
-//                        "Закончил с отличием",
-//                        null));
-//        educations.add(sectionEducation3);
-//
-//        AbstractSection education = new OrganizationSection(educations);
-//        resume.addSection(SectionType.EDUCATION, education);
+
+        List<Experience> listExperiences = new ArrayList<>();
+
+        Experience sectionExp1 = new Experience("Java Online Projects",
+                "",
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(2013, 10),
+                        YearMonth.now(),
+                        "Автор проекта.",
+                        "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        listExperiences.add(sectionExp1);
+
+        Experience sectionExp2 = new Experience("Wrike",
+                "",
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(2014, 10),
+                        YearMonth.of(2016, 1),
+                        "Старший разработчик (backend)",
+                        "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        listExperiences.add(sectionExp2);
+
+        AbstractSection experience = new OrganizationSection(listExperiences);
+        resume.addSection(SectionType.EXPERIENCE, experience);
+
+        List<Experience> educations = new ArrayList<>();
+
+        Experience sectionEducation1 = new Experience("Alcatel",
+                "",
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(1997, 9),
+                        YearMonth.of(1998, 3),
+                        "6 месяцев обучения цифровым телефонным сетям (Москва)",
+                        ""));
+        educations.add(sectionEducation1);
+
+        Experience sectionEducation2 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                "",
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(1993, 9),
+                        YearMonth.of(1996, 7),
+                        "Аспирантура (программист С, С++)",
+                        ""),
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(1987, 9),
+                        YearMonth.of(1993, 7),
+                        "Инженер (программист Fortran, C)",
+                        ""));
+        educations.add(sectionEducation2);
+
+        Experience sectionEducation3 = new Experience("Заочная физико-техническая школа при МФТИ",
+                null,
+                new Experience.DateIntervalExperience(
+                        YearMonth.of(1984, 9),
+                        YearMonth.of(1987, 6),
+                        "Закончил с отличием",
+                        null));
+        educations.add(sectionEducation3);
+
+        AbstractSection education = new OrganizationSection(educations);
+        resume.addSection(SectionType.EDUCATION, education);
 
         return resume;
     }

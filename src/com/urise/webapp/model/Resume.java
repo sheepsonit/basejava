@@ -48,6 +48,10 @@ public class Resume implements Serializable {
         return contacts;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
     }
