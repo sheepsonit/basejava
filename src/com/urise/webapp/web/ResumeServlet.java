@@ -1,6 +1,7 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
+import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.util.JsonParser;
@@ -44,6 +45,9 @@ public class ResumeServlet extends HttpServlet {
             case "edit":
                 existResume = sqlStorage.get(uuid);
                 break;
+            case "create":
+                existResume = new Resume("New resume");
+                break;
             default:
                 throw new IllegalStateException("Action " + action + " is illegal");
         }
@@ -59,31 +63,47 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
 
-        Resume resume = sqlStorage.get(uuid);
-        resume.setFullName(fullName);
+        Resume resume;
+        try {
+            resume = sqlStorage.get(uuid);
+            resume.setFullName(fullName);
+            updateResume(resume, request);
+        } catch (NotExistStorageException e) {
+            resume = new Resume(uuid, fullName);
+            sqlStorage.save(resume);
+            updateResume(resume, request);
+        } finally {
+            response.sendRedirect("resume");
+        }
+    }
+
+    private void updateResume(Resume resume, HttpServletRequest request) {
 
         for (ContactType type : ContactType.values()) {
             String contactValue = request.getParameter(type.name());
             if (contactValue.isEmpty() && contactValue.trim().isEmpty()) {
                 resume.getContacts().remove(type);
             } else {
-                resume.addContact(type,contactValue);
+                resume.addContact(type, contactValue);
             }
         }
-
-        String[] sections = request.getParameterValues("section");
 
         for (SectionType sectionType : SectionType.values()) {
             switch (sectionType) {
                 case PERSONAL:
                 case OBJECTIVE:
                     String txtSection = request.getParameter(sectionType.name());
-                    resume.addSection(sectionType, new TextSection(txtSection));
+                    if (!txtSection.isEmpty()) {
+                        resume.addSection(sectionType, new TextSection(txtSection.trim()));
+                    }
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATION:
-                    List<String> bulletedList = Arrays.asList(request.getParameter(sectionType.name()).trim().split("\\s*\r\n\\s+"));
-                    resume.addSection(sectionType, new BulletedListSection(bulletedList));
+                    String bullListSection = request.getParameter(sectionType.name());
+                    if (!bullListSection.isEmpty()) {
+                        List<String> bulletedList = Arrays.asList(bullListSection.trim().split("\r\n"));
+                        resume.addSection(sectionType, new BulletedListSection(bulletedList));
+                    }
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
@@ -92,6 +112,5 @@ public class ResumeServlet extends HttpServlet {
         }
 
         sqlStorage.update(resume);
-        response.sendRedirect("resume");
     }
 }

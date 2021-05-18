@@ -10,7 +10,7 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
-<section>
+<section class="view">
     <h1>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit">Edit</a></h1>
     <p>
         <c:forEach items="${resume.contacts}" var="contactEntry">

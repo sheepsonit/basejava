@@ -31,6 +31,8 @@
         </c:forEach>
 
         <h3>Секции: </h3>
+        <c:set var="newLine" scope="page" value="
+"/>
         <c:forEach items="${SectionType.values()}" var="sectionType">
             <dl>
                 <dt>${sectionType.title}</dt>
@@ -39,7 +41,8 @@
                         <dd><textarea name="PERSONAL"
                                       type="text"
                                       rows="2"
-                                      cols="200"><%=((TextSection) resume.getSection(SectionType.PERSONAL)).getContent()%></textarea>
+                                      cols="200"><c:if
+                                test="<%=resume.getSection(SectionType.PERSONAL) != null%>"><%=((TextSection) resume.getSection(SectionType.PERSONAL)).getContent()%></c:if></textarea>
                         </dd>
                     </c:when>
 
@@ -47,7 +50,8 @@
                         <dd><textarea name="OBJECTIVE"
                                       type="text"
                                       rows="2"
-                                      cols="200"><%=((TextSection) resume.getSection(SectionType.OBJECTIVE)).getContent()%></textarea>
+                                      cols="200"><c:if
+                                test="<%=resume.getSection(SectionType.OBJECTIVE) != null %>"><%=((TextSection) resume.getSection(SectionType.OBJECTIVE)).getContent()%></c:if></textarea>
                         </dd>
                     </c:when>
 
@@ -56,11 +60,10 @@
                         <textarea name="ACHIEVEMENT"
                                   type="text"
                                   rows="6"
-                                  cols="200"><c:forEach
+                                  cols="200"><c:if
+                                test="<%=resume.getSection(SectionType.OBJECTIVE) != null %>"><c:forEach
                                 items="<%=((BulletedListSection) resume.getSection(SectionType.ACHIEVEMENT)).getContent()%>"
-                                var="achievement">
-                            ${achievement}
-                        </c:forEach></textarea>
+                                var="achievement">${achievement}${newLine}</c:forEach></c:if></textarea>
                         </dd>
 
                     </c:when>
@@ -70,11 +73,10 @@
                         <textarea name="QUALIFICATION"
                                   type="text"
                                   rows="6"
-                                  cols="200"><c:forEach
+                                  cols="200"><c:if
+                                test="<%=resume.getSection(SectionType.OBJECTIVE) != null %>"><c:forEach
                                 items="<%=((BulletedListSection) resume.getSection(SectionType.QUALIFICATION)).getContent()%>"
-                                var="qualification">
-                            ${qualification}
-                        </c:forEach></textarea>
+                                var="qualification">${qualification}${newLine}</c:forEach></c:if></textarea>
                         </dd>
                     </c:when>
 
@@ -90,7 +92,7 @@
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
