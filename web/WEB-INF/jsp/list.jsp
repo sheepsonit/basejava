@@ -10,6 +10,7 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
+    <p><a href="resume?action=create"><img src="images/add.png"></a></p>
     <table border='1' cellpadding='8' cellspacing='0'>
         <tr>
             <th>Имя</th>
@@ -27,16 +28,15 @@
                             ${resume.getContact(ContactType.MAIL)}
                     </td>
                     <td>
-                        <a href="resume?uuid=${resume.uuid}&action=delete">Delete</a>
+                        <a href="resume?uuid=${resume.uuid}&action=delete"><img src="images/delete.png"></a>
                     </td>
                     <td>
-                        <a href="resume?uuid=${resume.uuid}&action=edit">Edit</a>
+                        <a href="resume?uuid=${resume.uuid}&action=edit"><img src="images/edit.png"></a>
                     </td>
                 </tr>
         </c:forEach>
     </table>
     <hr>
-    <a href="resume?action=create">Добавить новое резюме</a>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

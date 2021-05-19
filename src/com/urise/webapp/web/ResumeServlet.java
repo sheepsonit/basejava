@@ -9,9 +9,6 @@ import com.urise.webapp.util.JsonParser;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.Writer;
-import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,8 +57,8 @@ public class ResumeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
+        String uuid = request.getParameter("uuid").trim();
+        String fullName = request.getParameter("fullName").trim();
 
         Resume resume;
         try {
@@ -69,9 +66,11 @@ public class ResumeServlet extends HttpServlet {
             resume.setFullName(fullName);
             updateResume(resume, request);
         } catch (NotExistStorageException e) {
-            resume = new Resume(uuid, fullName);
-            sqlStorage.save(resume);
-            updateResume(resume, request);
+            if (!fullName.isEmpty()) {
+                resume = new Resume(uuid, fullName);
+                sqlStorage.save(resume);
+                updateResume(resume, request);
+            }
         } finally {
             response.sendRedirect("resume");
         }
@@ -92,16 +91,16 @@ public class ResumeServlet extends HttpServlet {
             switch (sectionType) {
                 case PERSONAL:
                 case OBJECTIVE:
-                    String txtSection = request.getParameter(sectionType.name());
+                    String txtSection = request.getParameter(sectionType.name()).trim();
                     if (!txtSection.isEmpty()) {
-                        resume.addSection(sectionType, new TextSection(txtSection.trim()));
+                        resume.addSection(sectionType, new TextSection(txtSection));
                     }
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATION:
-                    String bullListSection = request.getParameter(sectionType.name());
+                    String bullListSection = request.getParameter(sectionType.name()).trim();
                     if (!bullListSection.isEmpty()) {
-                        List<String> bulletedList = Arrays.asList(bullListSection.trim().split("\r\n"));
+                        List<String> bulletedList = Arrays.asList(bullListSection.split("\r\n"));
                         resume.addSection(sectionType, new BulletedListSection(bulletedList));
                     }
                     break;

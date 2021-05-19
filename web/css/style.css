@@ -16,11 +16,8 @@ footer {
 .view {
     width: 50%;
     margin: auto;
-    border: 2px solid;
 }
-.test{
-    border: 5px solid;
-}
+
 dl {
     background: none repeat scroll 0 0 #FAFAFA;
     margin: 8px 0;
