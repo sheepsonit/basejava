@@ -4,11 +4,13 @@ import com.urise.webapp.Config;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
-import com.urise.webapp.util.JsonParser;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid").trim();
         String fullName = request.getParameter("fullName").trim();
@@ -100,16 +102,106 @@ public class ResumeServlet extends HttpServlet {
                 case QUALIFICATION:
                     String bullListSection = request.getParameter(sectionType.name()).trim();
                     if (!bullListSection.isEmpty()) {
-                        List<String> bulletedList = Arrays.asList(bullListSection.split("\r\n"));
+                        List<String> bulletedList = new ArrayList<>(Arrays.asList(bullListSection.split("\r\n")));
+                        bulletedList.removeIf(String::isEmpty);
                         resume.addSection(sectionType, new BulletedListSection(bulletedList));
                     }
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
+                    String[] updateOrganizations = request.getParameterValues("organizationName" + sectionType.name());
+                    String[] newOrganizations = request.getParameterValues("newOrganizationName" + sectionType.name());
+                    List<Experience> experiences = new ArrayList<>();
+
+                    if (updateOrganizations != null) {
+                        experiences.addAll(readExistOrganizationSection(
+                                updateOrganizations,
+                                request));
+                    }
+
+                    experiences.addAll(readNewOrganizationSection(newOrganizations,
+                            sectionType.name(),
+                            request)
+                    );
+
+                    if (!experiences.isEmpty()) {
+                        resume.addSection(sectionType, new OrganizationSection(experiences));
+                    }
+
                     break;
             }
         }
 
         sqlStorage.update(resume);
+    }
+
+    private List<Experience> readExistOrganizationSection(String[] organizations, HttpServletRequest request) {
+        List<Experience> experiences = new ArrayList<>();
+        for (String organization : organizations) {
+            String name = organization.trim();
+            if (!name.isEmpty()) {
+
+                String url = request.getParameter("urlOf" + name).trim();
+
+                List<Experience.DateIntervalExperience> dates = readDateIntervals(
+                        request.getParameterValues("dateStartOf" + name),
+                        request.getParameterValues("dateEndOf" + name),
+                        request.getParameterValues("mainOf" + name),
+                        request.getParameterValues("noteOf" + name)
+                );
+
+                dates.addAll(readDateIntervals(
+                        request.getParameterValues("newDateStart" + name),
+                        request.getParameterValues("newDateEnd" + name),
+                        request.getParameterValues("newMain" + name),
+                        request.getParameterValues("newNote" + name)
+                ));
+
+                experiences.add(new Experience(new Link(name, url), dates));
+            }
+        }
+        return experiences;
+    }
+
+    private List<Experience> readNewOrganizationSection(String[] organizations, String type, HttpServletRequest request) {
+        List<Experience> experiences = new ArrayList<>();
+        for (String organization : organizations) {
+            String name = organization.trim();
+            if (!name.isEmpty()) {
+
+                String url = request.getParameter("newOrganizationUrl" + type).trim();
+
+                List<Experience.DateIntervalExperience> dates = readDateIntervals(
+                        request.getParameterValues("newDateStart" + type),
+                        request.getParameterValues("newDateEnd" + type),
+                        request.getParameterValues("newMain" + type),
+                        request.getParameterValues("newNote" + type)
+                );
+                if (!dates.isEmpty()) {
+                    experiences.add(new Experience(new Link(name, url), dates));
+                }
+            }
+        }
+        return experiences;
+    }
+
+    private List<Experience.DateIntervalExperience> readDateIntervals(String[] datesStart, String[] datesEnd, String[] mains, String[] notes) {
+        List<Experience.DateIntervalExperience> dates = new ArrayList<>();
+
+        for (int j = 0; j < datesStart.length; j++) {
+            String dateStart = datesStart[j].trim();
+            String dateEnd = datesEnd[j].trim();
+            String mainInfo = mains[j].trim();
+
+            if (!dateStart.isEmpty() && !dateEnd.isEmpty() && !mainInfo.isEmpty()) {
+                dates.add(new Experience.DateIntervalExperience(
+                        YearMonth.parse(dateStart, DateTimeFormatter.ofPattern("yyyy-MM")),
+                        YearMonth.parse(dateEnd, DateTimeFormatter.ofPattern("yyyy-MM")),
+                        mainInfo,
+                        notes[j])
+                );
+            }
+        }
+        return dates;
     }
 }
